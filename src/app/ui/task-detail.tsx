@@ -1,11 +1,23 @@
+'use client'
+
 import { CloseIcon } from "@/app/ui/svg-icons";
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type TaskDetailProps = {
   todo: Todo;
-  handleCloseItem: () => void;
+  // handleCloseItem: () => void;
 } 
 
-export default function TaskDetail({ todo, handleCloseItem }: TaskDetailProps ) {
+export default function TaskDetail({ todo }: TaskDetailProps ) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleCloseItem = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('selected');
+    router.push(`/?${params.toString()}`);
+  }
+
   return (
     <div className="w-1/2 p-8 border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col">
       <div className="flex justify-between items-center mb-8">

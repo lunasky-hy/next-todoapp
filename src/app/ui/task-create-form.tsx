@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import { categories } from "@/app/models/sampledata";
+import { createTask } from "@/app/repos/database-mock";
+import { useRouter } from "next/navigation";
 
 type TaskCreateFormProps = {
   selectedCategory: typeof categories[number];
-  handleCreate: (newItem: Todo) => boolean;
 }
 
-export default function TaskCreateForm({ selectedCategory, handleCreate }: TaskCreateFormProps) {
+export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps) {
+  const router = useRouter();
   const [newTodoTitle, setNewTodoTitle] = useState('');
 
-  const eventAddTodo = (e: React.FormEvent) => {
+  const eventAddTodo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newTodoTitle.trim() === '') return;
 
@@ -22,7 +24,12 @@ export default function TaskCreateForm({ selectedCategory, handleCreate }: TaskC
       category: selectedCategory === 'すべて' ? '仕事' : selectedCategory,
     }
 
-    if (handleCreate(newTodo)) {
+    const newTaskId = await createTask(newTodo);
+
+    if (newTaskId >= 0) {
+      const param = new URLSearchParams();
+      param.set('selected', newTodo.id.toString());
+      router.push(`/?${param.toString()}`);
       setNewTodoTitle('');
     }
   }
