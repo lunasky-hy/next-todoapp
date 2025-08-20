@@ -5,13 +5,10 @@ import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteTask, updateTask } from "@/app/repos/database-mock";
+import { updateTask, deleteTask } from "@/app/repos/database";
 
 type TaskListProps = {
   todos: Array<Todo>;
-  // handleOnSelect: (todo: Todo) => void;
-  // handleToggleStatus: (id: number) => void;
-  // handleDelete: (id: number) => void;
 }
 
 export default function TaskList({ todos }: TaskListProps) {
@@ -25,7 +22,7 @@ export default function TaskList({ todos }: TaskListProps) {
     router.push(`/?${params.toString()}`)
   };
 
-  const handleToggleStatus: (id: number) => void = async (id) => {
+  const handleToggleStatus: (id: string) => void = async (id) => {
     const todo = todos?.find((t) => t.id === id);
     if (todo) {
       todo.completed = !todo.completed;
@@ -34,7 +31,7 @@ export default function TaskList({ todos }: TaskListProps) {
     router.refresh();
   };
 
-  const handleDelete: (id: number) => void = async (id) => {
+  const handleDelete: (id: string) => void = async (id) => {
     await deleteTask(id);
     router.refresh();
   };

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { categories } from "@/app/models/sampledata";
-import { createTask } from "@/app/repos/database-mock";
+import { createTask } from "@/app/repos/database";
 import { useRouter } from "next/navigation";
 
 type TaskCreateFormProps = {
@@ -18,7 +18,7 @@ export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps
     if (newTodoTitle.trim() === '') return;
 
     const newTodo: Todo = {
-      id: Date.now(),
+      id: Date.now().toString(),
       text: newTodoTitle,
       completed: false,
       category: selectedCategory === 'すべて' ? '仕事' : selectedCategory,
@@ -26,7 +26,7 @@ export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps
 
     const newTaskId = await createTask(newTodo);
 
-    if (newTaskId >= 0) {
+    if (newTaskId !== "") {
       const param = new URLSearchParams();
       param.set('selected', newTodo.id.toString());
       router.push(`/?${param.toString()}`);

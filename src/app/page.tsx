@@ -1,11 +1,11 @@
 import TaskDetail from '@/app/ui/task-detail';
-import { createTask, getTasks, updateTask } from '@/app/repos/database-mock'
+import { getTasks } from '@/app/repos/database'
 import TaskList from './ui/task-list';
 
 // ホームページコンポーネント
 export default async function HomePage(props: { 
   searchParams?: Promise<{
-    selected?: number;
+    selected?: string;
 }>}) {
   const searchParams = await props.searchParams;
   const selectedTodoId = searchParams?.selected;

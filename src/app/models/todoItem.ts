@@ -1,8 +1,8 @@
 
 // ToDoアイテムの型定義
 type Todo = {
-  id: number;
+  id: string;
   text: string;
   completed: boolean;
-  category: '仕事' | 'プライベート' | '学習';
+  category?: string;
 };
