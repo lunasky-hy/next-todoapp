@@ -16,7 +16,6 @@ export default function TaskList({ todos }: TaskListProps) {
   const [selectedCategory, setSelectedCategory] = useState<typeof categories[number]>('すべて');
   const router = useRouter();
 
-
   const handleOnSelect: (todo: Todo) => void = (todo) => {
     const params = new URLSearchParams();
     params.set('selected', todo.id.toString());

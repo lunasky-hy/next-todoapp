@@ -41,6 +41,12 @@ export default function TaskDetail({ todo }: TaskDetailProps ) {
             {todo.completed ? '完了' : '未完了'}
           </p>
         </div>
+        {todo.note && (
+          <div>
+            <label className="block text-sm font-small text-gray-500 dark:text-gray-400 mb-1">ノート</label>
+            <p className="p-3 bg-white dark:bg-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-100">{todo.note}</p>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ import { Todo } from "@/app/models/todoItem";
 
 // サンプルのToDoデータ
 export const sampleTodos: Todo[] = [
-  { id: '1', text: 'Next.jsのプロジェクトをセットアップする', completed: true, category: '仕事' },
+  { id: '1', text: 'Next.jsのプロジェクトをセットアップする', note: "詳細", completed: true, category: '仕事' },
   { id: '2', text: 'Tailwind CSSを導入する', completed: true, category: '仕事' },
   { id: '3', text: 'React Hooksのドキュメントを読む', completed: false, category: '学習' },
   { id: '4', text: '買い物に行く', completed: false, category: 'プライベート' },

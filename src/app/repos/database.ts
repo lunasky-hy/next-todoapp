@@ -16,6 +16,7 @@ class FirestoreTaskDatabase implements TaskDatabase {
     toFirestore: (task: Todo) => {
       return {
         text: task.text,
+        note: task.note,
         completed: task.completed,
         category: task.category,
       };
@@ -29,6 +30,7 @@ class FirestoreTaskDatabase implements TaskDatabase {
       return {
         id: snapshot.id,
         text: data.text,
+        note: data.note,
         completed: data.completed,
         category: data.category,
       };
@@ -77,7 +79,7 @@ class FirestoreTaskDatabase implements TaskDatabase {
       const taskRef = doc(db, "tasks", id);
       await deleteDoc(taskRef);
     } catch (error) {
-      console.error("Error updating document: ", error);
+      console.error("Error deleting document: ", error);
     }
   }
 }

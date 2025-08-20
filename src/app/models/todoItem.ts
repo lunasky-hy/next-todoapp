@@ -3,6 +3,7 @@
 export type Todo = {
   id: string;
   text: string;
+  note?: string;
   completed: boolean;
   category?: string;
 };

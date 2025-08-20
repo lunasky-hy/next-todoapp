@@ -1,5 +1,6 @@
 import TaskDetail from '@/app/ui/task-detail';
-import { getTasks } from '@/app/repos/database'
+import { getTasks } from '@/app/repos/database';
+// import { getTasks } from '@/app/repos/database-mock';
 import TaskList from './ui/task-list';
 
 // ホームページコンポーネント
