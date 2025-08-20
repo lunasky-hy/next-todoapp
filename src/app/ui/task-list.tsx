@@ -6,6 +6,7 @@ import TaskCreateForm from "@/app/ui/task-create-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateTask, deleteTask } from "@/app/repos/database";
+import { Todo } from "@/app/models/todoItem";
 
 type TaskListProps = {
   todos: Array<Todo>;

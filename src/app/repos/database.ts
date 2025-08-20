@@ -1,7 +1,8 @@
 'use server'
 
 import db from "@/app/repos/firebase/firebase";
-import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDocs, QueryDocumentSnapshot, serverTimestamp, setDoc, SnapshotOptions, updateDoc } from "firebase/firestore";
+import { Todo } from "@/app/models/todoItem";
+import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDocs, QueryDocumentSnapshot, SnapshotOptions, updateDoc } from "firebase/firestore";
 
 export interface TaskDatabase {
   createTask(todo: Todo): Promise<string>;

@@ -1,6 +1,6 @@
 
 // ToDoアイテムの型定義
-type Todo = {
+export type Todo = {
   id: string;
   text: string;
   completed: boolean;

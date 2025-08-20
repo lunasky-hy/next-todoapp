@@ -1,3 +1,4 @@
+import { Todo } from "@/app/models/todoItem";
 
 // サンプルのToDoデータ
 export const sampleTodos: Todo[] = [
