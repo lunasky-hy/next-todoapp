@@ -4,6 +4,7 @@ import { useState } from "react";
 import { categories } from "@/app/models/sampledata";
 import { createTask } from "@/app/repos/database";
 import { useRouter } from "next/navigation";
+import { Todo } from "@/app/models/todoItem";
 
 type TaskCreateFormProps = {
   selectedCategory: typeof categories[number];
@@ -18,7 +19,7 @@ export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps
     if (newTodoTitle.trim() === '') return;
 
     const newTodo: Todo = {
-      id: Date.now().toString(),
+      id: '',
       text: newTodoTitle,
       completed: false,
       category: selectedCategory === 'すべて' ? '仕事' : selectedCategory,

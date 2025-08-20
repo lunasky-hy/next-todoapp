@@ -1,4 +1,5 @@
 import { EditIcon, TrashIcon } from "@/app/ui/svg-icons";
+import { Todo } from "@/app/models/todoItem";
 
 type TaskListItemProps = {
   todo: Todo;

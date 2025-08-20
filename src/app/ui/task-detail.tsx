@@ -2,10 +2,10 @@
 
 import { CloseIcon } from "@/app/ui/svg-icons";
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Todo } from "@/app/models/todoItem";
 
 type TaskDetailProps = {
   todo: Todo;
-  // handleCloseItem: () => void;
 } 
 
 export default function TaskDetail({ todo }: TaskDetailProps ) {
