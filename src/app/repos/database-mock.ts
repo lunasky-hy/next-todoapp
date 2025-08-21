@@ -21,6 +21,15 @@ class MockDatabase implements TaskDatabase {
     return this.mockDatabase;
   }
 
+  async getTaskById(id: string): Promise<Todo | null> {
+    const data = this.mockDatabase.find((it) => it.id === id);
+    if (data) {
+      return data;
+    } else {
+      return null;
+    }
+  }
+
   async updateTask(todo: Todo): Promise<boolean> {
     const idx = this.mockDatabase.findIndex((item) => item.id === todo.id);
     if (idx >= 0) {

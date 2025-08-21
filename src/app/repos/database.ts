@@ -2,11 +2,12 @@
 
 import db from "@/app/repos/firebase/firebase";
 import { Todo } from "@/app/models/todoItem";
-import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDocs, QueryDocumentSnapshot, SnapshotOptions, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, QueryDocumentSnapshot, SnapshotOptions, updateDoc } from "firebase/firestore";
 
 export interface TaskDatabase {
   createTask(todo: Todo): Promise<string>;
   getTasks(): Promise<Array<Todo>>;
+  getTaskById(id: string): Promise<Todo | null>;
   updateTask(todo: Todo): Promise<boolean>;
   deleteTask(id: string): Promise<void>;
 }
@@ -59,13 +60,25 @@ class FirestoreTaskDatabase implements TaskDatabase {
     return tasks;
   }
 
+  async getTaskById(id: string): Promise<Todo | null> {
+    const taskRef = doc(db, "tasks", id).withConverter(this.todoConverter);
+    const taskSnapshot = await getDoc(taskRef);
+
+    if (taskSnapshot.exists()) {
+      return taskSnapshot.data();
+    } else {
+      return null;
+    }
+  }
+
   async updateTask(todo: Todo): Promise<boolean> {
     try {
-      const taskRef = doc(db, "tasks", todo.id);
+      const taskRef = doc(db, "tasks", todo.id).withConverter(this.todoConverter);
       await updateDoc(taskRef, {
         text: todo.text,
         completed: todo.completed,
         category: todo.category,
+        note: todo.note,
       });
       return true;
     } catch (error) {
@@ -88,6 +101,10 @@ const taskDatabase = new FirestoreTaskDatabase();
 
 export async function getTasks(): Promise<Array<Todo>> {
   return taskDatabase.getTasks();
+}
+
+export async function getTaskById(id: string): Promise<Todo | null> {
+  return taskDatabase.getTaskById(id);
 }
 
 export async function createTask(todo: Todo): Promise<string> {

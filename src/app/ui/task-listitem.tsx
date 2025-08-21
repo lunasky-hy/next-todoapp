@@ -1,5 +1,6 @@
 import { EditIcon, TrashIcon } from "@/app/ui/svg-icons";
 import { Todo } from "@/app/models/todoItem";
+import Link from "next/link";
 
 type TaskListItemProps = {
   todo: Todo;
@@ -32,9 +33,11 @@ export default function TaskListItem(props: TaskListItemProps) {
         {props.todo.text}
       </span>
       <div className="flex items-center space-x-3">
-        <button className="p-2 text-gray-400 hover:text-blue-500 transition-colors duration-200">
-          <EditIcon />
-        </button>
+        <Link href={`/edit/${props.todo.id}`}>
+          <button className="p-2 text-gray-400 hover:text-blue-500 transition-colors duration-200">
+            <EditIcon />
+          </button>
+        </Link>
         <button onClick={(e) => { e.stopPropagation(); props.handleDelete(props.todo); }} className="p-2 text-gray-400 hover:text-red-500 transition-colors duration-200">
           <TrashIcon />
         </button>

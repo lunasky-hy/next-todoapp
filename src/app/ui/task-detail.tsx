@@ -1,8 +1,9 @@
 'use client'
 
-import { CloseIcon } from "@/app/ui/svg-icons";
+import { CloseIcon, EditIcon } from "@/app/ui/svg-icons";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Todo } from "@/app/models/todoItem";
+import Link from "next/link";
 
 type TaskDetailProps = {
   todo: Todo;
@@ -21,7 +22,14 @@ export default function TaskDetail({ todo }: TaskDetailProps ) {
   return (
     <div className="w-1/2 p-8 border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex flex-col">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">タスク詳細</h2>
+        <div className="flex items-center">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">タスク詳細</h2>
+          <Link href={`/edit/${todo.id}`}>
+            <button className="p-2 text-gray-500 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-blue-500 transition-colors duration-200 ml-1">
+              <EditIcon />
+            </button>
+          </Link>
+        </div>
         <button onClick={() => handleCloseItem()} className="p-2 text-gray-500 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
           <CloseIcon />
         </button>
