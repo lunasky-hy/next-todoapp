@@ -6,17 +6,6 @@ import { Todo } from "@/app/models/todoItem";
 
 class MockDatabase implements TaskDatabase {
   mockDatabase: Array<Todo> = [...sampleTodos];
-
-  async createTask(todo: Todo): Promise<string> {
-    try {
-      const newTodo: Todo = {...todo, id: Date.now().toString()}
-      this.mockDatabase = [...this.mockDatabase, todo];
-      return newTodo.id;
-    } catch {
-      return "";
-    }
-  }
-  
   async getTasks(): Promise<Array<Todo>> {
     return this.mockDatabase;
   }
@@ -29,6 +18,23 @@ class MockDatabase implements TaskDatabase {
       return null;
     }
   }
+  getTasksByCategory(category: string): Promise<Array<Todo>> {
+    throw new Error("Method not implemented.");
+  }
+  getCategories(): Promise<Array<string>> {
+    throw new Error("Method not implemented.");
+  }
+
+  async createTask(todo: Todo): Promise<string> {
+    try {
+      const newTodo: Todo = {...todo, id: Date.now().toString()}
+      this.mockDatabase = [...this.mockDatabase, todo];
+      return newTodo.id;
+    } catch {
+      return "";
+    }
+  }
+  
 
   async updateTask(todo: Todo): Promise<boolean> {
     const idx = this.mockDatabase.findIndex((item) => item.id === todo.id);

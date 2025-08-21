@@ -6,4 +6,6 @@ export type Todo = {
   note?: string;
   completed: boolean;
   category?: string;
+  createdAt?: number;
+  updatedAt?: number;
 };

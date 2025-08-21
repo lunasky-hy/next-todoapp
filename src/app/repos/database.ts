@@ -2,17 +2,20 @@
 
 import db from "@/app/repos/firebase/firebase";
 import { Todo } from "@/app/models/todoItem";
-import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, QueryDocumentSnapshot, SnapshotOptions, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, query, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, updateDoc, where } from "firebase/firestore";
 
 export interface TaskDatabase {
   createTask(todo: Todo): Promise<string>;
   getTasks(): Promise<Array<Todo>>;
+  getTasksByCategory(category: string): Promise<Array<Todo>>;
+  getCategories(): Promise<Array<string>>;
   getTaskById(id: string): Promise<Todo | null>;
   updateTask(todo: Todo): Promise<boolean>;
   deleteTask(id: string): Promise<void>;
 }
 
 class FirestoreTaskDatabase implements TaskDatabase {
+
   private todoConverter: FirestoreDataConverter<Todo> = {
     toFirestore: (task: Todo) => {
       return {
@@ -20,6 +23,8 @@ class FirestoreTaskDatabase implements TaskDatabase {
         note: task.note,
         completed: task.completed,
         category: task.category,
+        createdAt: task.createdAt,
+        updatedAt: task.updatedAt,
       };
     },
 
@@ -34,21 +39,13 @@ class FirestoreTaskDatabase implements TaskDatabase {
         note: data.note,
         completed: data.completed,
         category: data.category,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
       };
     },
   };
 
   private tasksCollection = collection(db, "tasks").withConverter(this.todoConverter);
-
-  async createTask(todo: Todo): Promise<string> {
-    try {
-      const newTask = await addDoc(this.tasksCollection, todo);
-      return newTask.id;
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      return "";
-    }
-  }
 
   async getTasks(): Promise<Array<Todo>> {
     const tasks = await getDocs(this.tasksCollection).then((snapshot) =>
@@ -71,6 +68,30 @@ class FirestoreTaskDatabase implements TaskDatabase {
     }
   }
 
+  async getTasksByCategory(category: string): Promise<Array<Todo>> {
+    const q = query(this.tasksCollection, where("category", "==", category));
+    const taskSnapshot = await getDocs(q).then((snapshot) => 
+      snapshot.docs.map((doc) => {
+        return doc.data();
+      })
+    );
+
+    return taskSnapshot;
+  }
+  getCategories(): Promise<Array<string>> {
+    throw new Error("Method not implemented.");
+  }
+
+  async createTask(todo: Todo): Promise<string> {
+    try {
+      const newTask = await addDoc(this.tasksCollection, { ...todo, createdAt: serverTimestamp() });
+      return newTask.id;
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      return "";
+    }
+  }
+
   async updateTask(todo: Todo): Promise<boolean> {
     try {
       const taskRef = doc(db, "tasks", todo.id).withConverter(this.todoConverter);
@@ -79,6 +100,7 @@ class FirestoreTaskDatabase implements TaskDatabase {
         completed: todo.completed,
         category: todo.category,
         note: todo.note,
+        updatedAt: serverTimestamp(),
       });
       return true;
     } catch (error) {

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { categories } from "@/app/models/sampledata";
 import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
 import { updateTask, deleteTask } from "@/app/repos/database";
@@ -13,7 +12,8 @@ type TaskListProps = {
 }
 
 export default function TaskList({ todos }: TaskListProps) {
-  const [selectedCategory, setSelectedCategory] = useState<typeof categories[number]>('すべて');
+  const [selectedCategory, setSelectedCategory] = useState<string>('すべて');
+  const categories = ['すべて', '仕事'];
   const router = useRouter();
 
   const handleOnSelect: (todo: Todo) => void = (todo) => {
