@@ -2,7 +2,7 @@
 
 import db from "@/app/repos/firebase/firebase";
 import { Todo } from "@/app/models/todoItem";
-import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, query, QueryDocumentSnapshot, serverTimestamp, SnapshotOptions, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, query, QueryDocumentSnapshot, SnapshotOptions, updateDoc, where } from "firebase/firestore";
 
 export interface TaskDatabase {
   createTask(todo: Todo): Promise<string>;
@@ -84,7 +84,7 @@ class FirestoreTaskDatabase implements TaskDatabase {
 
   async createTask(todo: Todo): Promise<string> {
     try {
-      const newTask = await addDoc(this.tasksCollection, { ...todo, createdAt: serverTimestamp() });
+      const newTask = await addDoc(this.tasksCollection, { ...todo, createdAt: Date.now() });
       return newTask.id;
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -100,7 +100,7 @@ class FirestoreTaskDatabase implements TaskDatabase {
         completed: todo.completed,
         category: todo.category,
         note: todo.note,
-        updatedAt: serverTimestamp(),
+        updatedAt: Date.now(),
       });
       return true;
     } catch (error) {
@@ -121,22 +121,24 @@ class FirestoreTaskDatabase implements TaskDatabase {
 
 const taskDatabase = new FirestoreTaskDatabase();
 
-export async function getTasks(): Promise<Array<Todo>> {
+async function getTasks(): Promise<Array<Todo>> {
   return taskDatabase.getTasks();
 }
 
-export async function getTaskById(id: string): Promise<Todo | null> {
+async function getTaskById(id: string): Promise<Todo | null> {
   return taskDatabase.getTaskById(id);
 }
 
-export async function createTask(todo: Todo): Promise<string> {
+ async function createTask(todo: Todo): Promise<string> {
   return taskDatabase.createTask(todo);
 }
 
-export async function updateTask(todo: Todo): Promise<boolean> {
+ async function updateTask(todo: Todo): Promise<boolean> {
   return taskDatabase.updateTask(todo);
 }
 
-export async function deleteTask(id: string): Promise<void> {
+ async function deleteTask(id: string): Promise<void> {
   return taskDatabase.deleteTask(id);
 }
+
+export { getTasks, getTaskById, createTask, updateTask, deleteTask };

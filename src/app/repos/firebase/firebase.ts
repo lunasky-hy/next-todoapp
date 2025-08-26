@@ -1,8 +1,8 @@
-import { getApp, getApps, initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { FirebaseOptions, getApp, getApps, initializeApp } from "firebase/app";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.FIREBASE_APIKEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   projectId: process.env.FIREBASE_PROJECT_ID,
@@ -12,7 +12,16 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig):  getApp();
+// let app = !getApps().length ? initializeApp(firebaseConfig):  getApp();
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+  initializeFirestore(app, {
+    ignoreUndefinedProperties: true,
+  });
+} else {
+  app = getApp();
+}
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app, "(default)");

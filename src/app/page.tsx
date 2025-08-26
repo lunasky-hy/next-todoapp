@@ -1,8 +1,6 @@
 import TaskDetail from '@/app/ui/task-detail';
 import { getTasks } from '@/app/repos/database';
-// import { getTasks } from '@/app/repos/database-mock';
 import TaskList from '@/app/ui/task-list';
-import SignIn from '@/app/ui/auth/sign-in';
 
 // ホームページコンポーネント
 export default async function HomePage(props: { 
@@ -18,7 +16,6 @@ export default async function HomePage(props: {
   return (
     <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="flex w-full max-w-6xl h-[90vh] mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
-      <SignIn />
         
         {/* 左パネル: ToDoリスト */}
         <div className={`flex flex-col p-6 transition-all duration-300 ease-in-out ${selectedTodoId ? 'w-1/2' : 'w-full'}`}>
