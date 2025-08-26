@@ -1,12 +1,17 @@
 import TaskDetail from '@/app/ui/task-detail';
 import { getTasks } from '@/app/repos/database';
 import TaskList from '@/app/ui/task-list';
+import { auth } from '@/app/lib/auth';
 
 // ホームページコンポーネント
 export default async function HomePage(props: { 
   searchParams?: Promise<{
     selected?: string;
 }>}) {
+  const session = await auth();
+  // if (!session?.user) {
+  //   return <div><p>ログインしてください。</p></div>
+  // }
   const searchParams = await props.searchParams;
   const selectedTodoId = searchParams?.selected;
 

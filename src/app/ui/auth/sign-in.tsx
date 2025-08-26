@@ -4,8 +4,7 @@ import { signIn } from "@/app/lib/auth" // if use client side signin, this impor
 export default function SignIn() {
   const handleSignIn = async () => {
     'use server'
-    await signIn();
-    // await signIn("github");
+    await signIn("github");
   }
 
   return (
