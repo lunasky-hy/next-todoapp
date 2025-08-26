@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { NextAuthProvider } from "./lib/next-provider-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,11 +18,12 @@ export const metadata: Metadata = {
   description: "This is todo app on web. Simple, Modern, ...",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="ja">
       <body
