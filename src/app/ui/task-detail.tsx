@@ -2,7 +2,7 @@
 
 import { CloseIcon, EditIcon } from "@/app/ui/svg-icons";
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Todo } from "@/app/models/todoItem";
+import { Todo } from "@/app/lib/models/todoItem";
 import Link from "next/link";
 
 type TaskDetailProps = {

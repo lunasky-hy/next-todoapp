@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
-import { updateTask, deleteTask } from "@/app/repos/database";
-import { Todo } from "@/app/models/todoItem";
+import { updateTask, deleteTask } from "@/app/lib/repos/task-repository";
+import { Todo } from "@/app/lib/models/todoItem";
 
 type TaskListProps = {
   todos: Array<Todo>;

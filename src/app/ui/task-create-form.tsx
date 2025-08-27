@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react";
-import { createTask } from "@/app/repos/database";
+import { createTask } from "@/app/lib/repos/task-repository";
 import { useRouter } from "next/navigation";
-import { Todo } from "@/app/models/todoItem";
+import { Todo } from "@/app/lib/models/todoItem";
 
 type TaskCreateFormProps = {
   selectedCategory: string;

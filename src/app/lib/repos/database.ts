@@ -1,7 +1,6 @@
-'use server'
 
-import db from "@/app/repos/firebase/firebase";
-import { Todo } from "@/app/models/todoItem";
+import db from "@/app/lib/repos/firebase/firebase";
+import { Todo } from "@/app/lib/models/todoItem";
 import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, query, QueryDocumentSnapshot, SnapshotOptions, updateDoc, where } from "firebase/firestore";
 
 export interface TaskDatabase {
@@ -14,7 +13,7 @@ export interface TaskDatabase {
   deleteTask(id: string): Promise<void>;
 }
 
-class FirestoreTaskDatabase implements TaskDatabase {
+export default class FirestoreTaskDatabase implements TaskDatabase {
 
   private todoConverter: FirestoreDataConverter<Todo> = {
     toFirestore: (task: Todo) => {
@@ -118,27 +117,3 @@ class FirestoreTaskDatabase implements TaskDatabase {
     }
   }
 }
-
-const taskDatabase = new FirestoreTaskDatabase();
-
-async function getTasks(): Promise<Array<Todo>> {
-  return taskDatabase.getTasks();
-}
-
-async function getTaskById(id: string): Promise<Todo | null> {
-  return taskDatabase.getTaskById(id);
-}
-
- async function createTask(todo: Todo): Promise<string> {
-  return taskDatabase.createTask(todo);
-}
-
- async function updateTask(todo: Todo): Promise<boolean> {
-  return taskDatabase.updateTask(todo);
-}
-
- async function deleteTask(id: string): Promise<void> {
-  return taskDatabase.deleteTask(id);
-}
-
-export { getTasks, getTaskById, createTask, updateTask, deleteTask };

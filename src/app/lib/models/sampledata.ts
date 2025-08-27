@@ -1,4 +1,4 @@
-import { Todo } from "@/app/models/todoItem";
+import { Todo } from "@/app/lib/models/todoItem";
 
 // サンプルのToDoデータ
 export const sampleTodos: Todo[] = [

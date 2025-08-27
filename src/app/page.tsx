@@ -1,5 +1,5 @@
 import TaskDetail from '@/app/ui/task-detail';
-import { getTasks } from '@/app/repos/database';
+import { getTasks } from '@/app/lib/repos/task-repository';
 import TaskList from '@/app/ui/task-list';
 import { auth } from '@/app/lib/auth';
 
@@ -9,9 +9,14 @@ export default async function HomePage(props: {
     selected?: string;
 }>}) {
   const session = await auth();
+
+  if(!session?.user) {
+    return <></>;
+  }
   // if (!session?.user) {
   //   return <div><p>ログインしてください。</p></div>
   // }
+  console.log(session.user);
   const searchParams = await props.searchParams;
   const selectedTodoId = searchParams?.selected;
 

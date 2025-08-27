@@ -1,6 +1,4 @@
-import { redirect } from "next/navigation"
-import { signIn, auth, providerMap } from "@/app/lib/auth"
-import { AuthError } from "next-auth"
+import { signIn } from "@/app/lib/auth"
 import { GitHubSsoIcon, GoogleSsoIcon } from "@/app/ui/auth/sso-icons"
  
 export default async function SignInPage(props: {

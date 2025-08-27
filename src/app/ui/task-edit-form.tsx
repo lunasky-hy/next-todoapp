@@ -1,9 +1,9 @@
 'use client'
 
-import { Todo } from "@/app/models/todoItem";
+import { Todo } from "@/app/lib/models/todoItem";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { updateTask } from "@/app/repos/database";
+import { updateTask } from "@/app/lib/repos/task-repository";
 
 type TaskEditProps = {
   todo: Todo;

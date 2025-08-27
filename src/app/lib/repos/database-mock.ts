@@ -1,10 +1,9 @@
-'use server'
 
-import { sampleTodos } from "@/app/models/sampledata";
-import { TaskDatabase } from "@/app/repos/database";
-import { Todo } from "@/app/models/todoItem";
+import { sampleTodos } from "@/app/lib/models/sampledata";
+import { TaskDatabase } from "@/app/lib/repos/database";
+import { Todo } from "@/app/lib/models/todoItem";
 
-class MockDatabase implements TaskDatabase {
+export default class MockDatabase implements TaskDatabase {
   mockDatabase: Array<Todo> = [...sampleTodos];
   async getTasks(): Promise<Array<Todo>> {
     return this.mockDatabase;
@@ -49,22 +48,4 @@ class MockDatabase implements TaskDatabase {
   async deleteTask(id: string): Promise<void> {
     this.mockDatabase = this.mockDatabase.filter((todo) => todo.id !== id);
   }
-}
-
-const taskDatabase = new MockDatabase();
-
-export async function getTasks(): Promise<Array<Todo>> {
-  return taskDatabase.getTasks();
-}
-
-export async function createTask(todo: Todo): Promise<string> {
-  return taskDatabase.createTask(todo);
-}
-
-export async function updateTask(todo: Todo): Promise<boolean> {
-  return taskDatabase.updateTask(todo);
-}
-
-export async function deleteTask(id: string): Promise<void> {
-  return taskDatabase.deleteTask(id);
 }
