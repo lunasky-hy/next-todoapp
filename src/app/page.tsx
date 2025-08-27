@@ -13,9 +13,6 @@ export default async function HomePage(props: {
   if(!session?.user) {
     return <></>;
   }
-  // if (!session?.user) {
-  //   return <div><p>ログインしてください。</p></div>
-  // }
   console.log(session.user);
   const searchParams = await props.searchParams;
   const selectedTodoId = searchParams?.selected;

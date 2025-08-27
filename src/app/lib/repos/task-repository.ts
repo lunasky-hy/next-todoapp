@@ -4,8 +4,8 @@ import { Todo } from "@/app/lib/models/todoItem";
 import FirestoreTaskDatabase from "@/app/lib/repos/database";
 import MockDatabase from "./database-mock";
 
-// const taskDatabase = new FirestoreTaskDatabase();
-const taskDatabase = new MockDatabase();
+const taskDatabase = new FirestoreTaskDatabase();
+// const taskDatabase = new MockDatabase();
 
 async function getTasks(): Promise<Array<Todo>> {
   return taskDatabase.getTasks();
