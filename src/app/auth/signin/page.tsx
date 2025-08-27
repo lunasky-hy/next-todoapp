@@ -1,5 +1,6 @@
 import { signIn } from "@/app/lib/auth"
 import { GitHubSsoIcon, GoogleSsoIcon } from "@/app/ui/auth/sso-icons"
+import Link from "next/link"
  
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined }
@@ -31,6 +32,11 @@ export default async function SignInPage(props: {
             onClick={() => signIn('google', { callbackUrl: '/' })} /> */}
           {/* GitHubサインインボタン */}
           <GitHubSsoIcon onClick={handleSignInGitHub} />
+        </div>
+        <div className="text-center w-full">
+          <Link href="/demo" className="text-gray-600 text-sm">
+              デモページでお試し
+          </Link>
         </div>
       </div>
     </div>
