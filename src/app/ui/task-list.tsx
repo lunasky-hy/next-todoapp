@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
 import { updateTask, deleteTask } from "@/app/lib/repos/task-repository";
@@ -14,12 +14,13 @@ type TaskListProps = {
 export default function TaskList({ todos }: TaskListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('すべて');
   const categories = ['すべて', '仕事'];
-  const router = useRouter();
+  const router = useRouter();  
+  const pathname = usePathname();
 
   const handleOnSelect: (todo: Todo) => void = (todo) => {
     const params = new URLSearchParams();
     params.set('selected', todo.id.toString());
-    router.push(`/?${params.toString()}`)
+    router.push(`${pathname}?${params.toString()}`)
   };
 
   const handleToggleStatus: (id: string) => void = async (id) => {

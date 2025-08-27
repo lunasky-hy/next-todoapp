@@ -1,21 +1,26 @@
-import TaskDetail from '@/app/ui/task-detail';
-import { getTasks } from '@/app/lib/repos/task-repository';
-import TaskList from '@/app/ui/task-list';
-import SignOut from './ui/auth/sign-out';
+import { getTasks } from "@/app/lib/repos/task-repository";
+import TaskList from "@/app/ui/task-list";
+import TaskDetail from "@/app/ui/task-detail";
+import { auth } from "@/app/lib/auth";
+import { redirect } from "next/navigation";
 
-export default async function HomePage(props: { 
+export default async function DemoPage(props: { 
   searchParams?: Promise<{
     selected?: string;
 }>}) {
+  const session = await auth();
+  if (session?.user) {
+    redirect('/');
+  }
+
   const searchParams = await props.searchParams;
   const selectedTodoId = searchParams?.selected;
 
   const todos = await getTasks();
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
-
+  
   return (
     <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <SignOut />
       <div className="flex w-full max-w-6xl h-[90vh] mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
         
         {/* 左パネル: ToDoリスト */}

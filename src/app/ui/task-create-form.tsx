@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createTask } from "@/app/lib/repos/task-repository";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Todo } from "@/app/lib/models/todoItem";
 
 type TaskCreateFormProps = {
@@ -11,6 +11,7 @@ type TaskCreateFormProps = {
 
 export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [newTodoTitle, setNewTodoTitle] = useState('');
 
   const eventAddTodo = async (e: React.FormEvent) => {
@@ -29,7 +30,7 @@ export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps
     if (newTaskId !== "") {
       const param = new URLSearchParams();
       param.set('selected', newTodo.id.toString());
-      router.push(`/?${param.toString()}`);
+      router.push(`${pathname}?${param.toString()}`);
       setNewTodoTitle('');
     }
   }
