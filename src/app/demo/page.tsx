@@ -20,8 +20,8 @@ export default async function DemoPage(props: {
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
   
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="flex w-full max-w-6xl h-[90vh] mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
+    <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">
+      <div className="flex w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
         
         {/* 左パネル: ToDoリスト */}
         <div className={`flex flex-col p-6 transition-all duration-300 ease-in-out ${selectedTodoId ? 'w-1/2' : 'w-full'}`}>

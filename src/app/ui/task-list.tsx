@@ -38,14 +38,14 @@ export default function TaskList({ todos }: TaskListProps) {
   };
 
   return (<>
-    <header className="mb-8 text-center">
+    <div className="mb-8 text-center">
       <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white">
         ToDoリスト
       </h1>
       <p className="text-gray-500 dark:text-gray-400 mt-2">
         今日やるべきことを管理しましょう
       </p>
-    </header>
+    </div>
 
     {/* 新規追加フォーム */}
     <TaskCreateForm 
@@ -70,7 +70,7 @@ export default function TaskList({ todos }: TaskListProps) {
     </div>
 
     {/* 一覧 */}
-    <div className="flex-grow space-y-4 overflow-y-auto pr-2">
+    <div className="flex-grow space-y-4 overflow-y-auto">
       {todos?.filter((it) => selectedCategory === 'すべて' ? true : it.category === selectedCategory)
         .map((todo) => <TaskListItem 
           key={todo.id}
@@ -79,13 +79,12 @@ export default function TaskList({ todos }: TaskListProps) {
           handleToggleStatus={(i) => handleToggleStatus(i.id)} 
           handleDelete={(i) => handleDelete(i.id)} 
         />)
-      }
-      
-      <footer className="mt-8 text-center text-gray-500 dark:text-gray-400 shrink-0">
+      }  
+    </div>
+    <footer className="mt-8 text-center text-gray-500 dark:text-gray-400 shrink-0">
         <p>
           {todos?.filter((t) => !t.completed).length}個のタスクが残っています
         </p>
       </footer>
-    </div>
   </>);    
 }
