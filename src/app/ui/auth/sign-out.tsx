@@ -1,15 +1,15 @@
 
 import { signOut } from "@/app/lib/auth" // if use client side signin, this import is enabled.
  
-export default function SignIn() {
-  const handleSignIn = async () => {
+export default function SignOut() {
+  const handleSignOut = async () => {
     'use server'
-    await signOut();
+    await signOut({redirectTo: '/auth/signin'});
   }
 
   return (
-    <form action={handleSignIn}>
-      <button type="submit">Signin with GitHub</button>
+    <form action={handleSignOut}>
+      <button type="submit">Signout</button>
     </form>
   );
 } 

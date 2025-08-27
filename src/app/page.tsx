@@ -2,6 +2,7 @@ import TaskDetail from '@/app/ui/task-detail';
 import { getTasks } from '@/app/lib/repos/task-repository';
 import TaskList from '@/app/ui/task-list';
 import { auth } from '@/app/lib/auth';
+import SignOut from './ui/auth/sign-out';
 
 // ホームページコンポーネント
 export default async function HomePage(props: { 
@@ -22,6 +23,7 @@ export default async function HomePage(props: {
 
   return (
     <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <SignOut />
       <div className="flex w-full max-w-6xl h-[90vh] mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
         
         {/* 左パネル: ToDoリスト */}
