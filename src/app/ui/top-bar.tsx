@@ -7,7 +7,6 @@ import Image from "next/image";
 export default async function TopBar() {
   const session = await auth();
   const isSignedIn = session?.user ? true : false;
-  console.log(session?.user?.image);
 
   return (
     <header className="bg-white shadow-sm">

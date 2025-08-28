@@ -25,6 +25,7 @@ export default async function DemoPage(props: {
         
         {/* 左パネル: ToDoリスト */}
         <div className={`flex flex-col p-6 transition-all duration-300 ease-in-out ${selectedTodoId ? 'w-1/2' : 'w-full'}`}>
+          <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm">注意：このデモページで登録されたタスクはタブを閉じると消えます。</p>
           <TaskList todos={todos} />
         </div>
         
