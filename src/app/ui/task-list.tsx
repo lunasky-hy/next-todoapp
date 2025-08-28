@@ -9,11 +9,11 @@ import { Todo } from "@/app/lib/models/todoItem";
 
 type TaskListProps = {
   todos: Array<Todo>;
+  categories: Array<string>;
 }
 
-export default function TaskList({ todos }: TaskListProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('すべて');
-  const categories = ['すべて', '仕事'];
+export default function TaskList({ todos, categories }: TaskListProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const router = useRouter();  
   const pathname = usePathname();
 
@@ -49,12 +49,12 @@ export default function TaskList({ todos }: TaskListProps) {
 
     {/* 新規追加フォーム */}
     <TaskCreateForm 
-      selectedCategory={!selectedCategory ? "すべて" : selectedCategory}
+      selectedCategory={selectedCategory}
     />
       
     {/* カテゴリ選択 */}
     <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
-      {categories.map((category) => (
+      {['', ...categories].map((category) => (
         <button
           key={category}
           onClick={() => setSelectedCategory(category)}
@@ -64,14 +64,14 @@ export default function TaskList({ todos }: TaskListProps) {
               : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
           }`}
         >
-          {category}
+          {category === '' ? 'すべて' : category}
         </button>
       ))}
     </div>
 
     {/* 一覧 */}
     <div className="flex-grow space-y-4 overflow-y-auto">
-      {todos?.filter((it) => selectedCategory === 'すべて' ? true : it.category === selectedCategory)
+      {todos?.filter((it) => selectedCategory === '' ? true : it.category === selectedCategory)
         .map((todo) => <TaskListItem 
           key={todo.id}
           todo={todo} 
@@ -82,9 +82,9 @@ export default function TaskList({ todos }: TaskListProps) {
       }  
     </div>
     <footer className="mt-8 text-center text-gray-500 dark:text-gray-400 shrink-0">
-        <p>
-          {todos?.filter((t) => !t.completed).length}個のタスクが残っています
-        </p>
-      </footer>
+      <p>
+        {todos?.filter((t) => !t.completed).length}個のタスクが残っています
+      </p>
+    </footer>
   </>);    
 }

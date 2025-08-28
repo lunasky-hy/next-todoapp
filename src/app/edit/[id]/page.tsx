@@ -1,11 +1,11 @@
-import { getTaskById, updateTask } from '@/app/lib/repos/task-repository';
+import { getTaskById } from '@/app/lib/repos/task-repository';
 import { CloseIcon } from '@/app/ui/svg-icons';
 import NotFound from '@/app/edit/[id]/not-found';
 import TaskEdit from '@/app/ui/task-edit-form';
 import Link from 'next/link';
 
 type EditTaskPageProps = {
-  params: Promise<{ // URLparamsを取得する部分をPromiseにして。
+  params: Promise<{
     id: string;
   }>;
 };

@@ -17,11 +17,18 @@ export default class MockDatabase implements TaskDatabase {
       return null;
     }
   }
+
   getTasksByCategory(category: string): Promise<Array<Todo>> {
-    throw new Error("Method not implemented.");
+    return Promise.resolve(this.mockDatabase.filter((todo) => todo.category === category));
   }
+
   getCategories(): Promise<Array<string>> {
-    throw new Error("Method not implemented.");
+    const categories = this.mockDatabase
+      .map((todo) => todo.category)
+      .filter((todo) => todo !== undefined)
+      .filter((item, idx, self) => self.indexOf(item) === idx);
+
+    return Promise.resolve(categories);
   }
 
   async createTask(todo: Todo): Promise<string> {
