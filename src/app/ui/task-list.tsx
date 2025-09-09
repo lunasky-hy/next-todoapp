@@ -6,6 +6,7 @@ import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
 import { updateTask, deleteTask } from "@/app/lib/repos/task-repository";
 import { Todo } from "@/app/lib/models/todoItem";
+import AddCategoryPopOver from "./category-popover";
 
 type TaskListProps = {
   todos: Array<Todo>;
@@ -20,7 +21,7 @@ export default function TaskList({ todos, categories }: TaskListProps) {
   const handleOnSelect: (todo: Todo) => void = (todo) => {
     const params = new URLSearchParams();
     params.set('selected', todo.id.toString());
-    router.push(`${pathname}?${params.toString()}`)
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   const handleToggleStatus: (id: string) => void = async (id) => {
@@ -67,6 +68,16 @@ export default function TaskList({ todos, categories }: TaskListProps) {
           {category === '' ? 'すべて' : category}
         </button>
       ))}
+      <div className="relative">
+        <button
+          onClick={() => {}}
+          className={'px-4 py-2 -mb-px font-semibold text-sm transition-colors duration-200 focus:outline-none border-b-2 border-transparent text-blue-500 hover:text-blue-700 dark:hover:text-blue-300'}
+        >
+          ＋カテゴリ追加
+        </button>
+        <AddCategoryPopOver />
+      </div>
+      
     </div>
 
     {/* 一覧 */}
