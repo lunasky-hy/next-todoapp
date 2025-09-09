@@ -15,6 +15,7 @@ type TaskListProps = {
 
 export default function TaskList({ todos, categories }: TaskListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [isVisiblePopover, setVisiblePopover] = useState<boolean>(false);
   const router = useRouter();  
   const pathname = usePathname();
 
@@ -70,12 +71,16 @@ export default function TaskList({ todos, categories }: TaskListProps) {
       ))}
       <div className="relative">
         <button
-          onClick={() => {}}
+          onClick={() => {setVisiblePopover(!isVisiblePopover)}}
           className={'px-4 py-2 -mb-px font-semibold text-sm transition-colors duration-200 focus:outline-none border-b-2 border-transparent text-blue-500 hover:text-blue-700 dark:hover:text-blue-300'}
         >
           ＋カテゴリ追加
         </button>
-        <AddCategoryPopOver />
+        {isVisiblePopover &&
+          <AddCategoryPopOver
+            onBlur={() => setVisiblePopover(false)}
+            onClose={() => setVisiblePopover(false)}
+          />}
       </div>
       
     </div>
