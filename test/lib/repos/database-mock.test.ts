@@ -20,6 +20,19 @@ describe('MockDatabase', () => {
       expect(tasks.length).toBe(sampleTodos.length);
       expect(tasks).toEqual(sampleTodos);
     });
+
+    it('should return tasks for a given category', async () => {
+      const category = '仕事';
+      const tasks = await db.getTasks(category);
+      const expectedTasks = sampleTodos.filter(t => t.category === category);
+      expect(tasks.length).toBe(expectedTasks.length);
+      expect(tasks).toEqual(expect.arrayContaining(expectedTasks));
+    });
+
+    it('should return an empty array for a category with no tasks', async () => {
+      const tasks = await db.getTasks('non-existent-category');
+      expect(tasks).toEqual([]);
+    });
   });
 
   describe('getTaskById', () => {
@@ -33,21 +46,6 @@ describe('MockDatabase', () => {
     it('should return null if task is not found', async () => {
       const task = await db.getTaskById('non-existent-id');
       expect(task).toBeNull();
-    });
-  });
-
-  describe('getTasksByCategory', () => {
-    it('should return tasks for a given category', async () => {
-      const category = '仕事';
-      const tasks = await db.getTasksByCategory(category);
-      const expectedTasks = sampleTodos.filter(t => t.category === category);
-      expect(tasks.length).toBe(expectedTasks.length);
-      expect(tasks).toEqual(expect.arrayContaining(expectedTasks));
-    });
-
-    it('should return an empty array for a category with no tasks', async () => {
-      const tasks = await db.getTasksByCategory('non-existent-category');
-      expect(tasks).toEqual([]);
     });
   });
 

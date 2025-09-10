@@ -14,8 +14,10 @@ export default class MockDatabase implements TaskDatabase {
     categories: [...sampleCategories],
   };
 
-  async getTasks(): Promise<Array<Todo>> {
-    return Promise.resolve(this.mockData.todos);
+  async getTasks(category?: string): Promise<Array<Todo>> {
+    return category ? 
+      this.mockData.todos.filter((todo) => todo.category === category) :
+      Promise.resolve(this.mockData.todos);
   }
 
   async getTaskById(id: string): Promise<Todo | null> {
@@ -25,10 +27,6 @@ export default class MockDatabase implements TaskDatabase {
     } else {
       return null;
     }
-  }
-
-  async getTasksByCategory(category: string): Promise<Array<Todo>> {
-    return Promise.resolve(this.mockData.todos.filter((todo) => todo.category === category));
   }
 
   async createTask(todo: Todo): Promise<string> {
@@ -68,7 +66,7 @@ export default class MockDatabase implements TaskDatabase {
   }
 
   async deleteCategory(category: string): Promise<void> {
-    const tasks = await this.getTasksByCategory(category);
+    const tasks = await this.getTasks(category);
     if (tasks.length > 0) throw Error("Cannot delete category with tasks");
 
     this.mockData.categories = this.mockData.categories.filter((cat) => cat !== category);
