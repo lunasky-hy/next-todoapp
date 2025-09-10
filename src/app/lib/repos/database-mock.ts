@@ -1,16 +1,25 @@
 
-import { sampleTodos } from "@/app/lib/models/sampledata";
+import { sampleCategories, sampleTodos } from "@/app/lib/models/sampledata";
 import { TaskDatabase } from "@/app/lib/repos/database";
 import { Todo } from "@/app/lib/models/todoItem";
 
+type MockSourceModel = {
+  todos: Array<Todo>;
+  categories: Array<string>;
+}
+
 export default class MockDatabase implements TaskDatabase {
-  mockDatabase: Array<Todo> = [...sampleTodos];
+  mockData: MockSourceModel = {
+    todos: [...sampleTodos], 
+    categories: [...sampleCategories],
+  };
+
   async getTasks(): Promise<Array<Todo>> {
-    return this.mockDatabase;
+    return Promise.resolve(this.mockData.todos);
   }
 
   async getTaskById(id: string): Promise<Todo | null> {
-    const data = this.mockDatabase.find((it) => it.id === id);
+    const data = this.mockData.todos.find((it) => it.id === id);
     if (data) {
       return data;
     } else {
@@ -18,34 +27,25 @@ export default class MockDatabase implements TaskDatabase {
     }
   }
 
-  getTasksByCategory(category: string): Promise<Array<Todo>> {
-    return Promise.resolve(this.mockDatabase.filter((todo) => todo.category === category));
-  }
-
-  getCategories(): Promise<Array<string>> {
-    const categories = this.mockDatabase
-      .map((todo) => todo.category)
-      .filter((todo) => todo !== undefined)
-      .filter((item, idx, self) => self.indexOf(item) === idx);
-
-    return Promise.resolve(categories);
+  async getTasksByCategory(category: string): Promise<Array<Todo>> {
+    return Promise.resolve(this.mockData.todos.filter((todo) => todo.category === category));
   }
 
   async createTask(todo: Todo): Promise<string> {
     try {
       const newTodo: Todo = {...todo, id: Date.now().toString()}
-      this.mockDatabase = [...this.mockDatabase, todo];
+
+      this.mockData.todos = [...this.mockData.todos, newTodo];
       return newTodo.id;
     } catch {
       return "";
     }
   }
-  
 
   async updateTask(todo: Todo): Promise<boolean> {
-    const idx = this.mockDatabase.findIndex((item) => item.id === todo.id);
+    const idx = this.mockData.todos.findIndex((item) => item.id === todo.id);
     if (idx >= 0) {
-      this.mockDatabase[idx] = todo;
+      this.mockData.todos[idx] = todo;
       return true;
     } else {
       return false;
@@ -53,6 +53,26 @@ export default class MockDatabase implements TaskDatabase {
   }
 
   async deleteTask(id: string): Promise<void> {
-    this.mockDatabase = this.mockDatabase.filter((todo) => todo.id !== id);
+    this.mockData.todos = this.mockData.todos.filter((todo) => todo.id !== id);
+  }
+
+  async getCategories(): Promise<Array<string>> {
+    const categories = this.mockData.categories;
+
+    return Promise.resolve(categories);
+  }
+
+  async createCategory(newCategory: string): Promise<Array<string>> {
+    this.mockData.categories = [...this.mockData.categories, newCategory];
+    return Promise.resolve(await this.getCategories());
+  }
+
+  async deleteCategory(category: string): Promise<void> {
+    const tasks = await this.getTasksByCategory(category);
+    if (tasks.length > 0) throw Error("Cannot delete category with tasks");
+
+    this.mockData.categories = this.mockData.categories.filter((cat) => cat !== category);
+
+    return Promise.resolve();
   }
 }

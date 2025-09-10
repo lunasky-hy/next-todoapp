@@ -1,13 +1,13 @@
 'use server'
 
 import { Todo } from "@/app/lib/models/todoItem";
-import FirestoreTaskDatabase from "@/app/lib/repos/database";
+import FirestoreTaskDatabase, { TaskDatabase } from "@/app/lib/repos/database";
 import MockDatabase from "./database-mock";
 import { auth } from "@/app/lib/auth";
 
 // const taskDatabase = new FirestoreTaskDatabase();
-const taskDatabase = new MockDatabase();
-const demoDatabase = new MockDatabase();
+const taskDatabase: TaskDatabase = new MockDatabase();
+const demoDatabase: TaskDatabase = new MockDatabase();
 
 async function getTasks(): Promise<Array<Todo>> {
   console.log('database access: getTasks()');

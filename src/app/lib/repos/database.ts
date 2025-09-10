@@ -5,13 +5,14 @@ import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, get
 import { auth } from "@/app/lib/auth";
 
 export interface TaskDatabase {
-  createTask(todo: Todo): Promise<string>;
-  getTasks(): Promise<Array<Todo>>;
-  getTasksByCategory(category: string): Promise<Array<Todo>>;
-  getCategories(): Promise<Array<string>>;
+  getTasks(category?: string): Promise<Array<Todo>>;
   getTaskById(id: string): Promise<Todo | null>;
+  createTask(todo: Todo): Promise<string>;
   updateTask(todo: Todo): Promise<boolean>;
   deleteTask(id: string): Promise<void>;
+  getCategories(): Promise<Array<string>>;
+  createCategory(newCategory: string): Promise<Array<string>>;
+  deleteCategory(category: string): Promise<void>;
 }
 
 export default class FirestoreTaskDatabase implements TaskDatabase {
@@ -45,15 +46,15 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
     },
   };
 
-  async getTasks(): Promise<Array<Todo>> {
+  async getTasks(category?: string): Promise<Array<Todo>> {
     const session = await auth();
     if (!session?.user) {
       return [];
     }
 
-
     const ref = collection(db, `users/${session.user.id}/tasks`).withConverter(this.todoConverter);
-    const tasks = await getDocs(ref).then((snapshot) =>
+    const queryObj = category ? query(ref, where("category", "==", category)) : ref;
+    const tasks = await getDocs(queryObj).then((snapshot) =>
       snapshot.docs.map((doc) => {
         return doc.data();
       })
@@ -78,30 +79,27 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
     }
   }
 
-  async getTasksByCategory(category: string): Promise<Array<Todo>> {
-    const session = await auth();
-    if (!session?.user) {
-      return [];
-    }
+  // async getTasksByCategory(category: string): Promise<Array<Todo>> {
+  //   const session = await auth();
+  //   if (!session?.user) {
+  //     return [];
+  //   }
     
-    try {
-      const ref = collection(db, `users/${session.user.id}/tasks`).withConverter(this.todoConverter);
-      const q = query(ref, where("category", "==", category));
-      const taskSnapshot = await getDocs(q).then((snapshot) => 
-        snapshot.docs.map((doc) => {
-          return doc.data();
-        })
-      );
+  //   try {
+  //     const ref = collection(db, `users/${session.user.id}/tasks`).withConverter(this.todoConverter);
+  //     const q = query(ref, where("category", "==", category));
+  //     const taskSnapshot = await getDocs(q).then((snapshot) => 
+  //       snapshot.docs.map((doc) => {
+  //         return doc.data();
+  //       })
+  //     );
   
-      return taskSnapshot;
-    } catch {
-      return [];
-    }
+  //     return taskSnapshot;
+  //   } catch {
+  //     return [];
+  //   }
 
-  }
-  getCategories(): Promise<Array<string>> {
-    throw new Error("Method not implemented.");
-  }
+  // }
 
   async createTask(todo: Todo): Promise<string> {
     const session = await auth();
@@ -155,5 +153,15 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
+  }
+
+  getCategories(): Promise<Array<string>> {
+    throw new Error("Method not implemented.");
+  }
+  createCategory(newCategory: string): Promise<Array<string>> {
+    throw new Error("Method not implemented.");
+  }
+  deleteCategory(category: string): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 }
