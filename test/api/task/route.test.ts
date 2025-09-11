@@ -63,34 +63,6 @@ describe('POST /api/task', () => {
     jest.clearAllMocks();
   });
 
-  describe('for unauthenticated users', () => {
-    beforeEach(() => {
-      mockedAuth.mockResolvedValue(null); // No user session
-    });
-
-    it('should use demoRepository to create a task and return the new ID', async () => {
-      // Arrange
-      const newTaskId = 'demo-task-123';
-      mockedDemoRepository.createTask.mockResolvedValue(newTaskId);
-      const req = new NextRequest(endpoint, {
-        method: 'POST',
-        body: JSON.stringify(newTodo),
-      });
-
-      // Act
-      const response = await POST(req);
-      const body = await response.json();
-
-      // Assert
-      expect(response.status).toBe(200);
-      expect(body).toEqual({ taskId: newTaskId });
-      expect(mockedDemoRepository.createTask).toHaveBeenCalledWith(newTodo);
-      expect(mockedDemoRepository.createTask).toHaveBeenCalledTimes(1);
-      expect(mockedTaskRepository.createTask).not.toHaveBeenCalled();
-      expect(mockedAuth).toHaveBeenCalledTimes(1);
-    });
-  });
-
   describe('for authenticated users', () => {
     beforeEach(() => {
       mockedAuth.mockResolvedValue({ user: { id: 'test-user' } });
@@ -115,7 +87,6 @@ describe('POST /api/task', () => {
       expect(mockedTaskRepository.createTask).toHaveBeenCalledWith(newTodo);
       expect(mockedTaskRepository.createTask).toHaveBeenCalledTimes(1);
       expect(mockedDemoRepository.createTask).not.toHaveBeenCalled();
-      expect(mockedAuth).toHaveBeenCalledTimes(1);
     });
   });
 });

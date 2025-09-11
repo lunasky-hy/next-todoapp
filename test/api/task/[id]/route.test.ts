@@ -34,11 +34,9 @@ jest.mock('next/server', () => {
   };
 });
 import { NextRequest } from 'next/server';
-import { auth } from '@/app/lib/auth';
 import { taskRepository } from '@/app/lib/repos/taskRepository';
 
 // Type-safe mock accessors
-const mockedAuth = auth as jest.Mock;
 const mockedTaskRepository = taskRepository as jest.Mocked<typeof taskRepository>;
 
 describe('GET /api/task/[id]', () => {
@@ -58,10 +56,6 @@ describe('GET /api/task/[id]', () => {
   });
 
   describe('for authenticated users', () => {
-    beforeEach(() => {
-      mockedAuth.mockResolvedValue({ user: { id: 'test-user' }}); // No user session
-    });
-
     it('should use demoRepository to get a task by ID', async () => {
       // Arrange
       mockedTaskRepository.getTaskById.mockResolvedValue(mockTodo);
@@ -100,5 +94,4 @@ describe('GET /api/task/[id]', () => {
       expect(mockedTaskRepository.deleteTask).toHaveBeenCalledWith('1');
     });
   });
-
 });
