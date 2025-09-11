@@ -37,12 +37,9 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
   };
 
   async getTasks(category?: string): Promise<Array<Todo>> {
-    const session = await auth();
-    if (!session?.user) {
-      return [];
-    }
+    const sessionUser = await this.getUserId();
 
-    const ref = collection(db, `users/${session.user.id}/tasks`).withConverter(this.todoConverter);
+    const ref = collection(db, `users/${sessionUser}/tasks`).withConverter(this.todoConverter);
     const queryObj = category ? query(ref, where("category", "==", category)) : ref;
     const tasks = await getDocs(queryObj).then((snapshot) =>
       snapshot.docs.map((doc) => {
@@ -54,12 +51,9 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
   }
 
   async getTaskById(id: string): Promise<Todo | null> {
-    const session = await auth();
-    if (!session?.user) {
-      return null;
-    }
+    const sessionUser = await this.getUserId();
 
-    const taskRef = doc(db, `users/${session.user.id}/tasks`, id).withConverter(this.todoConverter);
+    const taskRef = doc(db, `users/${sessionUser}/tasks`, id).withConverter(this.todoConverter);
     const taskSnapshot = await getDoc(taskRef);
 
     if (taskSnapshot.exists()) {
@@ -70,13 +64,10 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
   }
 
   async createTask(todo: Todo): Promise<string> {
-    const session = await auth();
-    if (!session?.user) {
-      return "";
-    }
+    const sessionUser = await this.getUserId();
 
     try {
-      const ref = collection(db, `users/${session.user.id}/tasks`).withConverter(this.todoConverter);
+      const ref = collection(db, `users/${sessionUser}/tasks`).withConverter(this.todoConverter);
       const newTask = await addDoc(ref, { ...todo, createdAt: Date.now() });
       return newTask.id;
     } catch (error) {
@@ -86,13 +77,10 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
   }
 
   async updateTask(todo: Todo): Promise<boolean> {
-    const session = await auth();
-    if (!session?.user) {
-      return false;
-    }
+    const sessionUser = await this.getUserId();
 
     try {
-      const ref = doc(db, `users/${session.user.id}/tasks`, todo.id).withConverter(this.todoConverter);
+      const ref = doc(db, `users/${sessionUser}/tasks`, todo.id).withConverter(this.todoConverter);
 
       await updateDoc(ref, {
         text: todo.text,
@@ -110,13 +98,10 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
   }
 
   async deleteTask(id: string): Promise<void> {
-    const session = await auth();
-    if (!session?.user) {
-      return;
-    }
+    const sessionUser = await this.getUserId();
 
     try {
-      const ref = doc(db, `users/${session.user.id}/tasks`, id).withConverter(this.todoConverter);
+      const ref = doc(db, `users/${sessionUser}/tasks`, id).withConverter(this.todoConverter);
       await deleteDoc(ref);
     } catch (error) {
       console.error("Error deleting document: ", error);
@@ -131,5 +116,13 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
   }
   deleteCategory(category: string): Promise<void> {
     throw new Error("Method not implemented.");
+  }
+
+  async getUserId(): Promise<string> {
+    const session = await auth();
+    if (!session?.user?.id) {
+      throw new Error("User not authenticated");;
+    }
+    return session.user.id;
   }
 }

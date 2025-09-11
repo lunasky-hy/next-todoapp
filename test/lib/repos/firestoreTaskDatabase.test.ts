@@ -66,32 +66,63 @@ describe('FirestoreTaskDatabase', () => {
     });
 
     it('getTasks should return an empty array', async () => {
-      const tasks = await db.getTasks();
-      expect(tasks).toEqual([]);
-      expect(mockedGetDocs).not.toHaveBeenCalled();
+      try {
+        const tasks = await db.getTasks();
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      } finally {
+        expect(mockedCollection).not.toHaveBeenCalled();
+        expect(mockedGetDocs).not.toHaveBeenCalled();
+        expect.assertions(3);
+      }
     });
 
     it('getTaskById should return null', async () => {
-      const task = await db.getTaskById('1');
-      expect(task).toBeNull();
-      expect(mockedGetDoc).not.toHaveBeenCalled();
+      try {
+        const task = await db.getTaskById('1');
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      } finally {
+        expect(mockedDoc).not.toHaveBeenCalled();
+        expect(mockedGetDoc).not.toHaveBeenCalled();
+        expect.assertions(3);
+      }
     });
 
     it('createTask should return an empty string', async () => {
-      const newId = await db.createTask(sampleTodos[0]);
-      expect(newId).toBe('');
-      expect(mockedAddDoc).not.toHaveBeenCalled();
+      try {
+        const newId = await db.createTask(sampleTodos[0]);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      } finally {
+        expect(mockedCollection).not.toHaveBeenCalled();
+        expect(mockedAddDoc).not.toHaveBeenCalled();
+        expect.assertions(3);
+      }
     });
 
     it('updateTask should return false', async () => {
-      const result = await db.updateTask(sampleTodos[0]);
-      expect(result).toBe(false);
-      expect(mockedUpdateDoc).not.toHaveBeenCalled();
+      try {
+        const result = await db.updateTask(sampleTodos[0]);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      } finally {
+        expect(mockedDoc).not.toHaveBeenCalled();
+        expect(mockedUpdateDoc).not.toHaveBeenCalled();
+        expect.assertions(3);
+      }
     });
 
     it('deleteTask should do nothing', async () => {
-      await db.deleteTask('1');
-      expect(mockedDeleteDoc).not.toHaveBeenCalled();
+      try {
+        await db.deleteTask('1');
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      } finally {
+        expect(mockedDoc).not.toHaveBeenCalled();
+        expect(mockedDeleteDoc).not.toHaveBeenCalled();
+        expect.assertions(3);
+      }
     });
   });
 
