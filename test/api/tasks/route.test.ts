@@ -1,6 +1,8 @@
-import { GET } from '@/app/api/task/route';
+import { GET } from '@/app/api/tasks/route';
 import { sampleTodos } from '@/app/lib/models/sampledata';
 import { Todo } from '@/app/lib/models/todoItem';
+
+const endpoint = 'http://localhost/api/tasks';
 
 // Mock dependencies
 jest.mock('@/app/lib/auth', () => {
@@ -47,7 +49,7 @@ describe('GET /api/task', () => {
     });
 
     it('should use demoRepository and return all tasks', async () => {
-      const req = new NextRequest('http://localhost/api/task');
+      const req = new NextRequest(endpoint);
 
       // Act
       const response = await GET(req);
@@ -63,7 +65,7 @@ describe('GET /api/task', () => {
       // Arrange
       const category = '仕事';
       const filteredTasks = sampleTodos.filter(t => t.category === category);
-      const req = new NextRequest(`http://localhost/api/task?category=${category}`);
+      const req = new NextRequest(`${endpoint}?category=${category}`);
 
       // Act
       const response = await GET(req);
@@ -86,7 +88,7 @@ describe('GET /api/task', () => {
     it('should use taskRepository and return all tasks', async () => {
       // Arrange
 
-      const req = new NextRequest('http://localhost/api/task');
+      const req = new NextRequest(endpoint);
 
       // Act
       const response = await GET(req);
@@ -105,7 +107,7 @@ describe('GET /api/task', () => {
       // Arrange
       const category = '仕事';
       const filteredTasks = sampleTodos.filter(t => t.category === category);
-      const req = new NextRequest(`http://localhost/api/task?category=${category}`);
+      const req = new NextRequest(`${endpoint}?category=${category}`);
 
       // Act
       const response = await GET(req);
