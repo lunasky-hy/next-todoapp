@@ -9,7 +9,7 @@ type AddCategoryPopOverProps = {
 
 export default function AddCategoryPopOver({onBlur, onClose}: AddCategoryPopOverProps) {
   useEffect(() => {
-    const addCategoryForm = document.getElementById('popover-input')?.focus();
+    document.getElementById('popover-input')?.focus();
   }, []);
 
   return (

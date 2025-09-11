@@ -1,15 +1,16 @@
 "use client"
 
 import { useState } from "react";
-import { createTask } from "@/app/lib/repos/task-repository";
+import { demoRepository, taskRepository } from "@/app/lib/repos/taskRepository";
 import { usePathname, useRouter } from "next/navigation";
 import { Todo } from "@/app/lib/models/todoItem";
 
 type TaskCreateFormProps = {
   selectedCategory: string;
+  isDemo?: boolean;
 }
 
-export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps) {
+export default function TaskCreateForm({ selectedCategory, isDemo = false }: TaskCreateFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [newTodoTitle, setNewTodoTitle] = useState('');
@@ -25,7 +26,7 @@ export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps
       category: selectedCategory === 'すべて' ? '仕事' : selectedCategory,
     }
 
-    const newTaskId = await createTask(newTodo);
+    const newTaskId = await (isDemo ? demoRepository : taskRepository).createTask(newTodo);
 
     if (newTaskId !== "") {
       const param = new URLSearchParams();

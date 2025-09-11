@@ -1,5 +1,5 @@
 import TaskDetail from '@/app/ui/task-detail';
-import { getCategories, getTasks } from '@/app/lib/repos/task-repository';
+import { taskRepository } from '@/app/lib/repos/taskRepository';
 import TaskList from '@/app/ui/task-list';
 
 export default async function HomePage(props: { 
@@ -9,12 +9,14 @@ export default async function HomePage(props: {
   const searchParamsTask = props.searchParams;
   const [searchParams, todos, categories] = await Promise.all([
       searchParamsTask, 
-      getTasks(), 
-      getCategories()
+      taskRepository.getTasks(), 
+      taskRepository.getCategories(),
   ]);
   
   const selectedTodoId = searchParams?.selected;
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
+
+  console.log(categories);
 
   return (
     <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">

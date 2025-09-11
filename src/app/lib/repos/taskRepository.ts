@@ -7,6 +7,8 @@ let taskRepository: TaskDatabase;
 
 if (process.env.NODE_ENV === 'production') {
   taskRepository = new FirestoreTaskDatabase();
+} else if (process.env.CONNECT_FIRESTORE === 'true'){
+  taskRepository = new FirestoreTaskDatabase();
 } else {
   taskRepository = demoRepository;
 }

@@ -3,7 +3,7 @@
 import { Todo } from "@/app/lib/models/todoItem";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { updateTask } from "@/app/lib/repos/task-repository";
+import { taskRepository } from "@/app/lib/repos/taskRepository";
 
 type TaskEditProps = {
   todo: Todo;
@@ -25,7 +25,7 @@ export default function TaskEdit({ todo, categories }: TaskEditProps) {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateTask(editTodo);
+    await taskRepository.updateTask(editTodo);
     router.push(`${pathname}?selected=${editTodo.id}`);
   }
 

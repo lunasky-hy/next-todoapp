@@ -4,16 +4,17 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
-import { updateTask, deleteTask } from "@/app/lib/repos/task-repository";
+import { demoRepository, taskRepository } from "@/app/lib/repos/taskRepository";
 import { Todo } from "@/app/lib/models/todoItem";
 import AddCategoryPopOver from "./category-popover";
 
 type TaskListProps = {
   todos: Array<Todo>;
   categories: Array<string>;
+  isDemo?: boolean;
 }
 
-export default function TaskList({ todos, categories }: TaskListProps) {
+export default function TaskList({ todos, categories, isDemo = false }: TaskListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isVisiblePopover, setVisiblePopover] = useState<boolean>(false);
   const router = useRouter();  
@@ -29,13 +30,13 @@ export default function TaskList({ todos, categories }: TaskListProps) {
     const todo = todos?.find((t) => t.id === id);
     if (todo) {
       todo.completed = !todo.completed;
-      await updateTask(todo);
+      await (isDemo ? demoRepository : taskRepository).updateTask(todo);
     }
     router.refresh();
   };
 
   const handleDelete: (id: string) => void = async (id) => {
-    await deleteTask(id);
+    await (isDemo ? demoRepository : taskRepository).deleteTask(id);
     router.refresh();
   };
 

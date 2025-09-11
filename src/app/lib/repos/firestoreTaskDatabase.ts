@@ -36,6 +36,21 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
     },
   };
 
+  private userDataConverter: FirestoreDataConverter<Array<string>> = {
+    toFirestore: (categories: Array<string>) => {
+      return {
+        categories: categories,
+      };
+    },
+    fromFirestore: (
+      snapshot: QueryDocumentSnapshot,
+      options: SnapshotOptions,
+    ): Array<string> => {
+      const data = snapshot.data(options);
+      return data.categories;
+    },
+  }
+
   async getTasks(category?: string): Promise<Array<Todo>> {
     const sessionUser = await this.getUserId();
 
@@ -108,8 +123,21 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
     }
   }
 
-  getCategories(): Promise<Array<string>> {
-    throw new Error("Method not implemented.");
+  async getCategories(): Promise<Array<string>> {
+    const sessionUser = await this.getUserId();
+
+    try {
+      const ref = doc(db, `users`, sessionUser).withConverter(this.userDataConverter);
+      const docSnapshot = await getDoc(ref);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.error("Error get categories document: ", error);
+      return [];
+    }
   }
   createCategory(newCategory: string): Promise<Array<string>> {
     throw new Error("Method not implemented.");
