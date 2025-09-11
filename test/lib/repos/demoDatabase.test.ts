@@ -1,12 +1,12 @@
-import MockDatabase from '@/app/lib/repos/database-mock';
+import DemoDatabase from '@/app/lib/repos/demoDatabase';
 import { sampleCategories, sampleTodos } from '@/app/lib/models/sampledata';
 import { Todo } from '@/app/lib/models/todoItem';
 
 describe('MockDatabase', () => {
-  let db: MockDatabase;
+  let db: DemoDatabase;
 
   beforeEach(() => {
-    db = new MockDatabase();
+    db = new DemoDatabase();
   });
 
   it('should be initialized with sample data', async () => {

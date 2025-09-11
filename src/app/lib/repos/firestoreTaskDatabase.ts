@@ -3,17 +3,7 @@ import db from "@/app/lib/repos/firebase/firebase";
 import { Todo } from "@/app/lib/models/todoItem";
 import { addDoc, collection, deleteDoc, doc, FirestoreDataConverter, getDoc, getDocs, query, QueryDocumentSnapshot, SnapshotOptions, updateDoc, where } from "firebase/firestore";
 import { auth } from "@/app/lib/auth";
-
-export interface TaskDatabase {
-  getTasks(category?: string): Promise<Array<Todo>>;
-  getTaskById(id: string): Promise<Todo | null>;
-  createTask(todo: Todo): Promise<string>;
-  updateTask(todo: Todo): Promise<boolean>;
-  deleteTask(id: string): Promise<void>;
-  getCategories(): Promise<Array<string>>;
-  createCategory(newCategory: string): Promise<Array<string>>;
-  deleteCategory(category: string): Promise<void>;
-}
+import TaskDatabase from "@/app/lib/models/taskDatabase";
 
 export default class FirestoreTaskDatabase implements TaskDatabase {
 

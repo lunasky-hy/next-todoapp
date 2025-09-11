@@ -1,15 +1,15 @@
 
 import { sampleCategories, sampleTodos } from "@/app/lib/models/sampledata";
-import { TaskDatabase } from "@/app/lib/repos/database";
+import TaskDatabase from "@/app/lib/models/taskDatabase";
 import { Todo } from "@/app/lib/models/todoItem";
 
-type MockSourceModel = {
+type DemoSourceModel = {
   todos: Array<Todo>;
   categories: Array<string>;
 }
 
-export default class MockDatabase implements TaskDatabase {
-  mockData: MockSourceModel = {
+export default class DemoDatabase implements TaskDatabase {
+  mockData: DemoSourceModel = {
     todos: [...sampleTodos], 
     categories: [...sampleCategories],
   };
