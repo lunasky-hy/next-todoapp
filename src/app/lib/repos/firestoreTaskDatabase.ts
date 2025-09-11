@@ -69,28 +69,6 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
     }
   }
 
-  // async getTasksByCategory(category: string): Promise<Array<Todo>> {
-  //   const session = await auth();
-  //   if (!session?.user) {
-  //     return [];
-  //   }
-    
-  //   try {
-  //     const ref = collection(db, `users/${session.user.id}/tasks`).withConverter(this.todoConverter);
-  //     const q = query(ref, where("category", "==", category));
-  //     const taskSnapshot = await getDocs(q).then((snapshot) => 
-  //       snapshot.docs.map((doc) => {
-  //         return doc.data();
-  //       })
-  //     );
-  
-  //     return taskSnapshot;
-  //   } catch {
-  //     return [];
-  //   }
-
-  // }
-
   async createTask(todo: Todo): Promise<string> {
     const session = await auth();
     if (!session?.user) {
