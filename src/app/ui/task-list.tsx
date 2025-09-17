@@ -4,9 +4,9 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import TaskListItem from "@/app/ui/task-listitem";
 import TaskCreateForm from "@/app/ui/task-create-form";
-import { demoRepository, taskRepository } from "@/app/lib/repos/taskRepository";
 import { Todo } from "@/app/lib/models/todoItem";
 import AddCategoryPopOver from "./category-popover";
+import { deleteTask, updateTask } from "@/app/lib/actions/taskActions";
 
 type TaskListProps = {
   todos: Array<Todo>;
@@ -26,17 +26,14 @@ export default function TaskList({ todos, categories, isDemo = false }: TaskList
     router.replace(`${pathname}?${params.toString()}`);
   };
 
-  const handleToggleStatus: (id: string) => void = async (id) => {
-    const todo = todos?.find((t) => t.id === id);
-    if (todo) {
-      todo.completed = !todo.completed;
-      await (isDemo ? demoRepository : taskRepository).updateTask(todo);
-    }
-    router.refresh();
+  const handleToggleStatus: (todo: Todo) => void = (todo) => {
+    updateTask({...todo, completed: !(todo.completed)}, isDemo).then(() => {
+      router.refresh();
+    });
   };
 
   const handleDelete: (id: string) => void = async (id) => {
-    await (isDemo ? demoRepository : taskRepository).deleteTask(id);
+    deleteTask(id);
     router.refresh();
   };
 
@@ -83,17 +80,16 @@ export default function TaskList({ todos, categories, isDemo = false }: TaskList
             onClose={() => setVisiblePopover(false)}
           />}
       </div>
-      
     </div>
 
     {/* 一覧 */}
     <div className="flex-grow space-y-4 overflow-y-auto">
-      {todos?.filter((it) => selectedCategory === '' ? true : it.category === selectedCategory)
+      {todos?.filter((it) => selectedCategory === '' ? true : it.category === selectedCategory) // <--- ここのフィルターを止める（DB側でフィルター）
         .map((todo) => <TaskListItem 
           key={todo.id}
           todo={todo} 
           handleOnSelect={(i) => handleOnSelect(i)} 
-          handleToggleStatus={(i) => handleToggleStatus(i.id)} 
+          handleToggleStatus={(i) => handleToggleStatus(i)} 
           handleDelete={(i) => handleDelete(i.id)} 
         />)
       }  

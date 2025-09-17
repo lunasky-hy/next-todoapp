@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react";
-import { demoRepository, taskRepository } from "@/app/lib/repos/taskRepository";
 import { usePathname, useRouter } from "next/navigation";
 import { Todo } from "@/app/lib/models/todoItem";
+import { createTask } from "../lib/actions/taskActions";
 
 type TaskCreateFormProps = {
   selectedCategory: string;
@@ -26,7 +26,7 @@ export default function TaskCreateForm({ selectedCategory, isDemo = false }: Tas
       category: selectedCategory === 'すべて' ? '仕事' : selectedCategory,
     }
 
-    const newTaskId = await (isDemo ? demoRepository : taskRepository).createTask(newTodo);
+    const newTaskId = await createTask(newTodo, isDemo);
 
     if (newTaskId !== "") {
       const param = new URLSearchParams();

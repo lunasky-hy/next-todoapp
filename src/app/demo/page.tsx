@@ -1,8 +1,8 @@
-import { demoRepository } from "@/app/lib/repos/taskRepository";
 import TaskList from "@/app/ui/task-list";
 import TaskDetail from "@/app/ui/task-detail";
 import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
+import { getCategories, getTasks } from "@/app/lib/actions/taskActions";
 
 export default async function DemoPage(props: { 
   searchParams?: Promise<{
@@ -16,10 +16,10 @@ export default async function DemoPage(props: {
   const searchParams = await props.searchParams;
   const selectedTodoId = searchParams?.selected;
 
-  const todos = await demoRepository.getTasks();
+  const todos = await getTasks();
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
 
-  const categories = await demoRepository.getCategories();
+  const categories = await getCategories();
   
   return (
     <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">
