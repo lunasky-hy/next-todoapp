@@ -14,7 +14,6 @@ export async function getTaskById(id: string, isDemo: boolean = false) {
 }
 
 export async function createTask(newTodo: Todo, isDemo: boolean = false) {
-  console.log('createTask', newTodo);
   const repos = await getTaskRepository(isDemo);
   return await repos.createTask(newTodo);
 }

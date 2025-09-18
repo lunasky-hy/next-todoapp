@@ -11,14 +11,7 @@ jest.mock('@/app/lib/auth', () => {
 });
 jest.mock('@/app/lib/repos/taskRepository', () => ({
   __esModule: true, // This is important for ES modules
-  taskRepository: {
-    getTasks: jest.fn(),
-    createTask: jest.fn(),
-  },
-  demoRepository: {
-    getTasks: jest.fn(),
-    createTask: jest.fn(),
-  },
+  getTaskRepository: jest.fn().mockReturnValue({})
 }));
 jest.mock('next/server', () => {
   return {
@@ -37,15 +30,19 @@ jest.mock('next/server', () => {
     },
   };
 });
+jest.mock('@/app/lib/actions/taskActions', () => {
+  return {
+    getTasks: jest.fn(),
+    createTask: jest.fn((todo: Todo) => Promise.resolve(todo.id)),
+  }
+});
 import { NextRequest } from 'next/server';
 import { auth } from '@/app/lib/auth';
-import { demoRepository, taskRepository } from '@/app/lib/repos/taskRepository';
+import { getTaskRepository } from '@/app/lib/repos/taskRepository';
+import { createTask, getTasks } from '@/app/lib/actions/taskActions';
 
 // Type-safe mock accessors
 const mockedAuth = auth as jest.Mock;
-const mockedTaskRepository = taskRepository as jest.Mocked<typeof taskRepository>;
-const mockedDemoRepository = demoRepository as jest.Mocked<typeof demoRepository>;
-
 
 describe('POST /api/task', () => {
   const newTodo: Todo = {
@@ -70,8 +67,7 @@ describe('POST /api/task', () => {
 
     it('should use taskRepository to create a task and return the new ID', async () => {
       // Arrange
-      const newTaskId = 'real-task-456';
-      mockedTaskRepository.createTask.mockResolvedValue(newTaskId);
+      const newTaskId = newTodo.id;
       const req = new NextRequest(endpoint, {
         method: 'POST',
         body: JSON.stringify(newTodo),
@@ -84,9 +80,8 @@ describe('POST /api/task', () => {
       // Assert
       expect(response.status).toBe(200);
       expect(body).toEqual({ taskId: newTaskId });
-      expect(mockedTaskRepository.createTask).toHaveBeenCalledWith(newTodo);
-      expect(mockedTaskRepository.createTask).toHaveBeenCalledTimes(1);
-      expect(mockedDemoRepository.createTask).not.toHaveBeenCalled();
+      expect(createTask).toHaveBeenCalledWith(newTodo);
+      expect(createTask).toHaveBeenCalledTimes(1);
     });
   });
 });

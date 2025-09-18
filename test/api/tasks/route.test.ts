@@ -50,7 +50,6 @@ describe('GET /api/tasks', () => {
 
     it('should use taskRepository and return all tasks', async () => {
       // Arrange
-
       const req = new NextRequest(endpoint);
 
       // Act

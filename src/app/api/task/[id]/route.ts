@@ -1,5 +1,5 @@
+import { deleteTask, getTaskById, updateTask } from "@/app/lib/actions/taskActions";
 import { Todo } from "@/app/lib/models/todoItem";
-import { taskRepository } from "@/app/lib/repos/taskRepository";
 import { NextRequest, NextResponse } from "next/server";
 
 type RequestParams = {
@@ -8,7 +8,7 @@ type RequestParams = {
 
 export async function GET(req: NextRequest, { params }: { params: RequestParams }) {
   if (!params.id) throw Error('id is required');
-  const task = await taskRepository.getTaskById(params.id);
+  const task = await getTaskById(params.id);
 
   return new NextResponse(JSON.stringify(task), { status: 200 });
 }
@@ -19,7 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: RequestParams 
   if (!params.id) throw Error('id is required');
   if (updateObj.id !== params.id) throw Error('id mismatch');
   
-  if (await taskRepository.updateTask(updateObj)) {
+  if (await updateTask(updateObj)) {
     return new NextResponse(null, { status: 201 });
   } else {
     throw Error('update failed');
@@ -29,6 +29,6 @@ export async function PUT(req: NextRequest, { params }: { params: RequestParams 
 export async function DELETE(req: NextRequest, { params }: { params: RequestParams }) {
   if (!params.id) throw Error('id is required');
 
-  await taskRepository.deleteTask(params.id);
+  await deleteTask(params.id);
   return new NextResponse(null, { status: 204 });
 }

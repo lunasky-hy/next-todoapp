@@ -3,6 +3,16 @@ import { Todo } from '@/app/lib/models/todoItem';
 
 const endpoint = 'http://localhost/api/task/1';
 
+const mockTodo: Todo = {
+  id: '1',
+  text: 'Test Task',
+  completed: false,
+  category: 'Test',
+  note: 'A note',
+  createdAt: 123,
+  updatedAt: 123,
+};
+
 // Mock dependencies
 jest.mock('@/app/lib/auth', () => {
   return {
@@ -11,16 +21,7 @@ jest.mock('@/app/lib/auth', () => {
 });
 jest.mock('@/app/lib/repos/taskRepository', () => ({
   __esModule: true, // This is important for ES modules
-  taskRepository: {
-    getTaskById: jest.fn(),
-    updateTask: jest.fn(),
-    deleteTask: jest.fn(),
-  },
-  demoRepository: {
-    getTaskById: jest.fn(),
-    updateTask: jest.fn(),
-    deleteTask: jest.fn(),
-  },
+  getTaskRepository: jest.fn().mockReturnValue({})
 }));
 jest.mock('next/server', () => {
   return {
@@ -29,27 +30,23 @@ jest.mock('next/server', () => {
     })),
     NextResponse: jest.fn().mockImplementation((body, { status }) => ({
       status: status,
-      json: jest.fn(() => JSON.parse(body)),
+      json: jest.fn(() => body ? JSON.parse(body): body),
     })),
   };
 });
-import { NextRequest } from 'next/server';
-import { taskRepository } from '@/app/lib/repos/taskRepository';
+jest.mock('@/app/lib/actions/taskActions', () => {
+  return {
+    getTaskById: jest.fn((id: string) => Promise.resolve(mockTodo)),
+    updateTask: jest.fn((todo: Todo) => Promise.resolve(todo)),
+    deleteTask: jest.fn(),
+  }
+});
 
-// Type-safe mock accessors
-const mockedTaskRepository = taskRepository as jest.Mocked<typeof taskRepository>;
+import { NextRequest } from 'next/server';
+import { deleteTask, getTaskById, updateTask } from '@/app/lib/actions/taskActions';
+import { getTaskRepository } from '@/app/lib/repos/taskRepository';
 
 describe('GET /api/task/[id]', () => {
-  const mockTodo: Todo = {
-    id: '1',
-    text: 'Test Task',
-    completed: false,
-    category: 'Test',
-    note: 'A note',
-    createdAt: 123,
-    updatedAt: 123,
-  };
-
   beforeEach(() => {
     // Reset mocks before each test
     jest.clearAllMocks();
@@ -58,7 +55,6 @@ describe('GET /api/task/[id]', () => {
   describe('for authenticated users', () => {
     it('should use demoRepository to get a task by ID', async () => {
       // Arrange
-      mockedTaskRepository.getTaskById.mockResolvedValue(mockTodo);
       const req = new NextRequest(endpoint, { method: 'GET' });
 
       const response = await GET(req, { params: { id: '1' } });
@@ -66,12 +62,12 @@ describe('GET /api/task/[id]', () => {
 
       expect(response.status).toBe(200);
       expect(body).toEqual(mockTodo);
-      expect(mockedTaskRepository.getTaskById).toHaveBeenCalledWith('1');
+      expect(getTaskById).toHaveBeenCalledWith('1');
     })
 
     it('should use taskRepository to put a task', async () => {
       // Arrange
-      mockedTaskRepository.updateTask.mockResolvedValue(true);
+      // mockedTaskRepository.updateTask.mockResolvedValue(true);
       const req = new NextRequest(endpoint, {
         method: 'PUT',
         body: JSON.stringify(mockTodo),
@@ -80,18 +76,18 @@ describe('GET /api/task/[id]', () => {
       const response = await PUT(req, { params: { id: '1' } });
 
       expect(response.status).toBe(201);
-      expect(mockedTaskRepository.updateTask).toHaveBeenCalledWith(mockTodo);
+      expect(updateTask).toHaveBeenCalledWith(mockTodo);
     });
 
     it('should use taskRepository to delete a task', async () => {
       // Arrange
-      mockedTaskRepository.deleteTask.mockResolvedValue();
+      // mockedTaskRepository.deleteTask.mockResolvedValue();
       const req = new NextRequest(endpoint, { method: 'DELETE' });
 
       const response = await DELETE(req, { params: { id: '1' } });
 
       expect(response.status).toBe(204);
-      expect(mockedTaskRepository.deleteTask).toHaveBeenCalledWith('1');
+      expect(deleteTask).toHaveBeenCalledWith('1');
     });
   });
 });
