@@ -1,6 +1,6 @@
 'use client'
 
-import { CloseIcon, EditIcon } from "@/app/ui/svg-icons";
+import { CloseIcon, EditIcon } from "@/app/ui/common/svgIcons";
 import { usePathname, useRouter } from 'next/navigation';
 import { Todo } from "@/app/lib/models/todoItem";
 import Link from "next/link";

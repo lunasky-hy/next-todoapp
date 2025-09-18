@@ -1,6 +1,6 @@
-import { CloseIcon } from '@/app/ui/svg-icons';
+import { CloseIcon } from '@/app/ui/common/svgIcons';
 import NotFound from '@/app/edit/[id]/not-found';
-import TaskEdit from '@/app/ui/task-edit-form';
+import TaskEdit from '@/app/ui/form/taskEditForm';
 import Link from 'next/link';
 import { getTaskById } from '@/app/lib/actions/taskActions';
 
@@ -20,7 +20,7 @@ export default async function EditTaskPage({ params }: EditTaskPageProps) {
 
   return (
     <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="w-full max-w-6xl p-8 h-max bg-white rounded-lg shadow-xl dark:bg-gray-800">
+      <div className="w-full max-w-6xl p-8 h-max bg-white rounded-lg shadow-xl dark:bg-gray-800 ml-3 mr-3">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">タスク編集</h2>
           <Link href={"/"}>

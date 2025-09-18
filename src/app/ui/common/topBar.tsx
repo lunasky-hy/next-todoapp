@@ -1,7 +1,7 @@
-import { DefaultUserIcon } from "@/app/ui/svg-icons";
+import { DefaultUserIcon } from "@/app/ui/common/svgIcons";
 import { auth } from "@/app/lib/auth";
 import Link from "next/link";
-import SignOut from "./auth/sign-out";
+import SignOut from "../auth/signOut";
 import Image from "next/image";
 
 export default async function TopBar() {

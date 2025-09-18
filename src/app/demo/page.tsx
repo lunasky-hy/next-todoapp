@@ -1,5 +1,5 @@
-import TaskList from "@/app/ui/task-list";
-import TaskDetail from "@/app/ui/task-detail";
+import TaskList from "@/app/ui/taskList";
+import TaskDetail from "@/app/ui/taskDetail";
 import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 import { getCategories, getTasks } from "@/app/lib/actions/taskActions";

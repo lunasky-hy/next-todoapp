@@ -1,4 +1,4 @@
-import { EditIcon, TrashIcon } from "@/app/ui/svg-icons";
+import { EditIcon, TrashIcon } from "@/app/ui/common/svgIcons";
 import { Todo } from "@/app/lib/models/todoItem";
 import Link from "next/link";
 

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import TaskListItem from "@/app/ui/task-listitem";
-import TaskCreateForm from "@/app/ui/task-create-form";
+import TaskListItem from "@/app/ui/taskListItem";
+import TaskCreateForm from "@/app/ui/form/taskCreateForm";
 import { Todo } from "@/app/lib/models/todoItem";
-import AddCategoryPopOver from "./category-popover";
+import AddCategoryPopOver from "./categoryPopover";
 import { deleteTask, updateTask } from "@/app/lib/actions/taskActions";
 
 type TaskListProps = {
