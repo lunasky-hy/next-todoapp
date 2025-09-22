@@ -7,7 +7,7 @@ import TaskCreateForm from "@/app/ui/form/taskCreateForm";
 import { Todo } from "@/app/lib/models/todoItem";
 import AddCategoryPopOver from "@/app/ui/categoryPopover";
 import { createTask, deleteTask, getTasks, updateTask } from "@/app/lib/actions/taskActions";
-import { createCategory } from "@/app/lib/actions/categoryActions";
+import { createCategory, deleteCategory, getCategories } from "@/app/lib/actions/categoryActions";
 
 type TaskListProps = {
   todos: Array<Todo>;
@@ -62,6 +62,19 @@ export default function TaskList(props: TaskListProps) {
     }
   }
 
+  const handleCategoryDelete: () => void = async () => {
+    try {
+      await deleteCategory(selectedCategory);
+      setCategories(await getCategories());
+      setSelectedCategory('');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  
+  const filteredTodos = todos?.filter((it) => selectedCategory === '' ? true : it.category === selectedCategory);// <--- ここのフィルターを止める（DB側でフィルター）
+  const uncheckedTasks = filteredTodos?.filter((t) => !t.completed).length;
+
   return (<>
     <div className="mb-8 text-center">
       <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white">
@@ -109,9 +122,8 @@ export default function TaskList(props: TaskListProps) {
     </div>
 
     {/* 一覧 */}
-    <div className="flex-grow space-y-4 overflow-y-auto">
-      {todos?.filter((it) => selectedCategory === '' ? true : it.category === selectedCategory) // <--- ここのフィルターを止める（DB側でフィルター）
-        .map((todo) => <TaskListItem 
+    <div className="space-y-4 overflow-y-auto">
+      {filteredTodos.map((todo) => <TaskListItem 
           key={todo.id}
           todo={todo} 
           handleOnSelect={(t) => handleSelectTask(t.id)} 
@@ -119,11 +131,19 @@ export default function TaskList(props: TaskListProps) {
           handleDelete={(i) => handleTaskDelete(i.id)} 
         />)
       }
+      {filteredTodos.length === 0 && 
+        <div className="flex flex-col items-center justify-center h-20 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+          <p className="text-gray-500 dark:text-gray-400">タスクがありません。</p>
+          <button className="text-blue-500 dark:text-gray-400 hover:font-bold mt-2" onClick={handleCategoryDelete}>カテゴリを削除？</button>
+        </div>
+      }
     </div>
     <footer className="mt-8 text-center text-gray-500 dark:text-gray-400 shrink-0">
-      <p>
-        {todos?.filter((t) => !t.completed).length}個のタスクが残っています
-      </p>
+      { uncheckedTasks > 0 && 
+        <p>
+          {uncheckedTasks}個のタスクが残っています
+        </p>
+      }
     </footer>
   </>);    
 }
