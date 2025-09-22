@@ -5,7 +5,6 @@ import {
   createTask,
   updateTask,
   deleteTask,
-  getCategories,
 } from '@/app/lib/actions/taskActions';
 import { Todo } from '@/app/lib/models/todoItem';
 
@@ -20,7 +19,6 @@ const mockTaskRepository = {
   createTask: jest.fn(),
   updateTask: jest.fn(),
   deleteTask: jest.fn(),
-  getCategories: jest.fn(),
 };
 
 // Cast the mocked module for type safety and to control its return value
@@ -102,20 +100,6 @@ describe('taskActions', () => {
 
       expect(mockedGetTaskRepository).toHaveBeenCalledWith(true);
       expect(mockTaskRepository.deleteTask).toHaveBeenCalledWith(taskId);
-    });
-  });
-
-  describe('getCategories', () => {
-    it('should retrieve all categories', async () => {
-      const mockCategories = ['Work', 'Personal', 'Shopping'];
-      mockTaskRepository.getCategories.mockResolvedValue(mockCategories);
-
-      const result = await getCategories();
-
-      // getCategories in actions doesn't take isDemo, so it should be called with the default (false)
-      expect(mockedGetTaskRepository).toHaveBeenCalledWith();
-      expect(mockTaskRepository.getCategories).toHaveBeenCalled();
-      expect(result).toEqual(mockCategories);
     });
   });
 });

@@ -1,7 +1,7 @@
 'use server'
 import TaskDatabase from "@/app/lib/models/taskDatabase";
 import DemoDatabase from "@/app/lib/repos/demoDatabase";
-import FirestoreTaskDatabase from "./firestoreTaskDatabase";
+import FirestoreTaskDatabase from "@/app/lib/repos/firestoreTaskDatabase";
 
 const demoRepository: TaskDatabase = new DemoDatabase();
 

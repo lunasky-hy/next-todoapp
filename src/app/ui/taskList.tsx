@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import TaskListItem from "@/app/ui/taskListItem";
 import TaskCreateForm from "@/app/ui/form/taskCreateForm";
 import { Todo } from "@/app/lib/models/todoItem";
-import AddCategoryPopOver from "./categoryPopover";
+import AddCategoryPopOver from "@/app/ui/categoryPopover";
 import { deleteTask, updateTask } from "@/app/lib/actions/taskActions";
 
 type TaskListProps = {

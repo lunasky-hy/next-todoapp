@@ -1,6 +1,7 @@
 import TaskDetail from '@/app/ui/taskDetail';
 import TaskList from '@/app/ui/taskList';
-import { getCategories, getTasks } from './lib/actions/taskActions';
+import { getTasks } from '@/app/lib/actions/taskActions';
+import { getCategories } from '@/app/lib/actions/categoryActions';
 
 export default async function HomePage(props: { 
   searchParams?: Promise<{

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Todo } from "@/app/lib/models/todoItem";
-import { createTask } from "../../lib/actions/taskActions";
+import { createTask } from "@/app/lib/actions/taskActions";
 
 type TaskCreateFormProps = {
   selectedCategory: string;

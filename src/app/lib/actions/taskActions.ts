@@ -27,8 +27,3 @@ export async function deleteTask(id: string, isDemo: boolean = false) {
   const repos = await getTaskRepository(isDemo);
   return await repos.deleteTask(id);
 }
-
-export async function getCategories() {
-  const repos = await getTaskRepository();
-  return await repos.getCategories();  
-}
