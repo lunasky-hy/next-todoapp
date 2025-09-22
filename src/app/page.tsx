@@ -1,6 +1,7 @@
-import TaskDetail from '@/app/ui/task-detail';
-import { getCategories, getTasks } from '@/app/lib/repos/task-repository';
-import TaskList from '@/app/ui/task-list';
+import TaskDetail from '@/app/ui/taskDetail';
+import TaskList from '@/app/ui/taskList';
+import { getTasks } from '@/app/lib/actions/taskActions';
+import { getCategories } from '@/app/lib/actions/categoryActions';
 
 export default async function HomePage(props: { 
   searchParams?: Promise<{
@@ -9,8 +10,8 @@ export default async function HomePage(props: {
   const searchParamsTask = props.searchParams;
   const [searchParams, todos, categories] = await Promise.all([
       searchParamsTask, 
-      getTasks(), 
-      getCategories()
+      getTasks(),
+      getCategories(),
   ]);
   
   const selectedTodoId = searchParams?.selected;
@@ -18,7 +19,7 @@ export default async function HomePage(props: {
 
   return (
     <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">
-      <div className="flex w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
+      <div className="flex w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden ml-3 mr-3">
         
         {/* 左パネル: ToDoリスト */}
         <div className={`flex flex-col p-6 transition-all duration-300 ease-in-out h-full ${selectedTodoId ? 'w-1/2' : 'w-full'}`}>

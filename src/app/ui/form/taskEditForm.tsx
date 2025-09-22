@@ -3,7 +3,7 @@
 import { Todo } from "@/app/lib/models/todoItem";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { updateTask } from "@/app/lib/repos/task-repository";
+import { updateTask } from "@/app/lib/actions/taskActions";
 
 type TaskEditProps = {
   todo: Todo;
