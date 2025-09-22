@@ -1,5 +1,5 @@
-import { EditIcon, TrashIcon } from "@/app/ui/svg-icons";
-import { Todo } from "@/app/models/todoItem";
+import { EditIcon, TrashIcon } from "@/app/ui/common/svgIcons";
+import { Todo } from "@/app/lib/models/todoItem";
 import Link from "next/link";
 
 type TaskListItemProps = {

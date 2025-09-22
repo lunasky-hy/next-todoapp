@@ -1,9 +1,9 @@
 'use client'
 
-import { Todo } from "@/app/models/todoItem";
-import { useRouter } from "next/navigation";
+import { Todo } from "@/app/lib/models/todoItem";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { updateTask } from "@/app/repos/database";
+import { updateTask } from "@/app/lib/actions/taskActions";
 
 type TaskEditProps = {
   todo: Todo;
@@ -13,19 +13,20 @@ type TaskEditProps = {
 export default function TaskEdit({ todo, categories }: TaskEditProps) {
   const [editTodo, setEditTodo] = useState(todo);
   const router = useRouter();
+  const pathname = usePathname();
 
   const setText = (t: string) => setEditTodo({ ...editTodo, text: t});
   const setCategory = (t: string) => setEditTodo({ ...editTodo, category: t});
   const setNote = (t: string) => setEditTodo({ ...editTodo, note: t ? t : undefined});
 
   const handleClose = () => {
-    router.push(`/?selected=${todo.id}`);
+    router.push(`${pathname}?selected=${todo.id}`);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateTask(editTodo);
-    router.push(`/?selected=${editTodo.id}`);
+    router.push(`${pathname}?selected=${editTodo.id}`);
   }
 
   return (

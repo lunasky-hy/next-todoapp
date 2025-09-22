@@ -1,8 +1,8 @@
 'use client'
 
-import { CloseIcon, EditIcon } from "@/app/ui/svg-icons";
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Todo } from "@/app/models/todoItem";
+import { CloseIcon, EditIcon } from "@/app/ui/common/svgIcons";
+import { usePathname, useRouter } from 'next/navigation';
+import { Todo } from "@/app/lib/models/todoItem";
 import Link from "next/link";
 
 type TaskDetailProps = {
@@ -11,12 +11,10 @@ type TaskDetailProps = {
 
 export default function TaskDetail({ todo }: TaskDetailProps ) {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const handleCloseItem = () => {
-    const params = new URLSearchParams(searchParams);
-    params.delete('selected');
-    router.push(`/?${params.toString()}`);
+    router.push(pathname);
   }
 
   return (

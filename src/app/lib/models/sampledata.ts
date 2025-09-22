@@ -1,4 +1,4 @@
-import { Todo } from "@/app/models/todoItem";
+import { Todo } from "@/app/lib/models/todoItem";
 
 // サンプルのToDoデータ
 export const sampleTodos: Todo[] = [
@@ -9,3 +9,5 @@ export const sampleTodos: Todo[] = [
   { id: '5', text: '新しいToDoアプリのUIをデザインする', completed: false, category: '仕事' },
   { id: '6', text: '英語の単語を10個覚える', completed: true, category: '学習' },
 ];
+
+export const sampleCategories: string[] = ['仕事', 'プライベート', '学習', '趣味'];

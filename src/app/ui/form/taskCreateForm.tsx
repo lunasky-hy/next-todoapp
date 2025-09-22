@@ -1,41 +1,30 @@
 "use client"
 
 import { useState } from "react";
-import { createTask } from "@/app/repos/database";
-import { useRouter } from "next/navigation";
-import { Todo } from "@/app/models/todoItem";
+import { Todo } from "@/app/lib/models/todoItem";
 
 type TaskCreateFormProps = {
   selectedCategory: string;
+  handleCreate: (todo: Todo) => Promise<boolean>;
 }
 
-export default function TaskCreateForm({ selectedCategory }: TaskCreateFormProps) {
-  const router = useRouter();
+export default function TaskCreateForm({ selectedCategory, handleCreate}: TaskCreateFormProps) {
   const [newTodoTitle, setNewTodoTitle] = useState('');
 
   const eventAddTodo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newTodoTitle.trim() === '') return;
+    const title = newTodoTitle.trim();
+    if (title === '') return;
 
-    const newTodo: Todo = {
+    handleCreate({
       id: '',
-      text: newTodoTitle,
+      text: title,
       completed: false,
-      category: selectedCategory === 'すべて' ? '仕事' : selectedCategory,
-    }
-
-    const newTaskId = await createTask(newTodo);
-
-    if (newTaskId !== "") {
-      const param = new URLSearchParams();
-      param.set('selected', newTodo.id.toString());
-      router.push(`/?${param.toString()}`);
-      setNewTodoTitle('');
-    }
+      category: selectedCategory,
+    }).then(() => setNewTodoTitle(''));
   }
 
   return (
-
     <form onSubmit={eventAddTodo} className="mb-6">
       <div className="flex gap-2">
         <input

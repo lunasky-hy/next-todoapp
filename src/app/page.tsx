@@ -1,26 +1,29 @@
-import TaskDetail from '@/app/ui/task-detail';
-import { getTasks } from '@/app/repos/database';
-// import { getTasks } from '@/app/repos/database-mock';
-import TaskList from './ui/task-list';
+import TaskDetail from '@/app/ui/taskDetail';
+import TaskList from '@/app/ui/taskList';
+import { getTasks } from '@/app/lib/actions/taskActions';
+import { getCategories } from '@/app/lib/actions/categoryActions';
 
-// ホームページコンポーネント
 export default async function HomePage(props: { 
   searchParams?: Promise<{
     selected?: string;
 }>}) {
-  const searchParams = await props.searchParams;
+  const searchParamsTask = props.searchParams;
+  const [searchParams, todos, categories] = await Promise.all([
+      searchParamsTask, 
+      getTasks(),
+      getCategories(),
+  ]);
+  
   const selectedTodoId = searchParams?.selected;
-
-  const todos = await getTasks();
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="flex w-full max-w-6xl h-[90vh] mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden">
+    <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">
+      <div className="flex w-full max-w-6xl mx-auto bg-white rounded-lg shadow-xl dark:bg-gray-800 overflow-hidden ml-3 mr-3">
         
         {/* 左パネル: ToDoリスト */}
-        <div className={`flex flex-col p-6 transition-all duration-300 ease-in-out ${selectedTodoId ? 'w-1/2' : 'w-full'}`}>
-          <TaskList todos={todos} />
+        <div className={`flex flex-col p-6 transition-all duration-300 ease-in-out h-full ${selectedTodoId ? 'w-1/2' : 'w-full'}`}>
+          <TaskList todos={todos} categories={categories} />
         </div>
         
         {/* 右パネル: タスク詳細 */}
