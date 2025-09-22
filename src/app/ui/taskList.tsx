@@ -31,14 +31,14 @@ export default function TaskList(props: TaskListProps) {
 
   const handleTaskStatusToggle: (todo: Todo) => void = (todo) => {
     updateTask({...todo, completed: !(todo.completed)}, props.isDemo).then(() => {
-      getTasks().then((data) => setTodos(data));
+      getTasks('', props.isDemo).then((data) => setTodos(data));
     });
   };
 
   const handleTaskCreate: (todo: Todo) => Promise<boolean> = async (todo) => {
     try {
       const id = await createTask(todo, props.isDemo);
-      setTodos(await getTasks());
+      setTodos(await getTasks('', props.isDemo));
       handleSelectTask(id);
       return true;
     } catch (e) {
@@ -48,8 +48,8 @@ export default function TaskList(props: TaskListProps) {
   }
 
   const handleTaskDelete: (id: string) => void = async (id) => {
-    await deleteTask(id);
-    getTasks().then((data) => setTodos(data));
+    await deleteTask(id, props.isDemo);
+    getTasks('', props.isDemo).then((data) => setTodos(data));
   };
 
   const handleCategoryCreate: (text: string) => void = async (text) => {
@@ -64,8 +64,8 @@ export default function TaskList(props: TaskListProps) {
 
   const handleCategoryDelete: () => void = async () => {
     try {
-      await deleteCategory(selectedCategory);
-      setCategories(await getCategories());
+      await deleteCategory(selectedCategory, props.isDemo);
+      setCategories(await getCategories(props.isDemo));
       setSelectedCategory('');
     } catch (e) {
       console.error(e);

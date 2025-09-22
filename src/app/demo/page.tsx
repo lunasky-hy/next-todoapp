@@ -14,13 +14,14 @@ export default async function DemoPage(props: {
     redirect('/');
   }
 
-  const searchParams = await props.searchParams;
+  const [searchParams, todos, categories] = await Promise.all([
+      props.searchParams, 
+      getTasks('', true),
+      getCategories(true),
+  ]);
+
   const selectedTodoId = searchParams?.selected;
-
-  const todos = await getTasks();
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
-
-  const categories = await getCategories();
   
   return (
     <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">

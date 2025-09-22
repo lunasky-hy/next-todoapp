@@ -10,14 +10,12 @@ export default async function HomePage(props: {
   const searchParamsTask = props.searchParams;
   const [searchParams, todos, categories] = await Promise.all([
       searchParamsTask, 
-      getTasks(), 
+      getTasks(),
       getCategories(),
   ]);
   
   const selectedTodoId = searchParams?.selected;
   const selectedTodo = todos?.find((todo) => todo.id == selectedTodoId);
-
-  console.log(categories);
 
   return (
     <main className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-8 pb-8">
