@@ -1,10 +1,8 @@
 import { signIn } from "@/app/lib/auth"
-import { GitHubSsoIcon, GoogleSsoIcon } from "@/app/ui/auth/sso-icons"
+import { GitHubSsoIcon } from "@/app/ui/auth/sso-icons"
 import Link from "next/link"
  
-export default async function SignInPage(props: {
-  searchParams: { callbackUrl: string | undefined }
-}) {
+export default async function SignInPage() {
   const handleSignInGitHub = async () => {
     'use server'
     await signIn("github", { redirectTo: "/" });
