@@ -6,7 +6,8 @@ import TaskListItem from "@/app/ui/taskListItem";
 import TaskCreateForm from "@/app/ui/form/taskCreateForm";
 import { Todo } from "@/app/lib/models/todoItem";
 import AddCategoryPopOver from "@/app/ui/categoryPopover";
-import { deleteTask, updateTask } from "@/app/lib/actions/taskActions";
+import { createTask, deleteTask, getTasks, updateTask } from "@/app/lib/actions/taskActions";
+import { createCategory } from "@/app/lib/actions/categoryActions";
 
 type TaskListProps = {
   todos: Array<Todo>;
@@ -14,28 +15,52 @@ type TaskListProps = {
   isDemo?: boolean;
 }
 
-export default function TaskList({ todos, categories, isDemo = false }: TaskListProps) {
+export default function TaskList(props: TaskListProps) {
+  const [todos, setTodos] = useState(props.todos);
+  const [categories, setCategories] = useState(props.categories);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isVisiblePopover, setVisiblePopover] = useState<boolean>(false);
-  const router = useRouter();  
+  const router = useRouter();
   const pathname = usePathname();
 
-  const handleOnSelect: (todo: Todo) => void = (todo) => {
+  const handleSelectTask: (id: string) => void = (id) => {
     const params = new URLSearchParams();
-    params.set('selected', todo.id.toString());
+    params.set('selected', id);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
-  const handleToggleStatus: (todo: Todo) => void = (todo) => {
-    updateTask({...todo, completed: !(todo.completed)}, isDemo).then(() => {
-      router.refresh();
+  const handleTaskStatusToggle: (todo: Todo) => void = (todo) => {
+    updateTask({...todo, completed: !(todo.completed)}, props.isDemo).then(() => {
+      getTasks().then((data) => setTodos(data));
     });
   };
 
-  const handleDelete: (id: string) => void = async (id) => {
-    deleteTask(id);
-    router.refresh();
+  const handleTaskCreate: (todo: Todo) => Promise<boolean> = async (todo) => {
+    try {
+      const id = await createTask(todo, props.isDemo);
+      setTodos(await getTasks());
+      handleSelectTask(id);
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  const handleTaskDelete: (id: string) => void = async (id) => {
+    await deleteTask(id);
+    getTasks().then((data) => setTodos(data));
   };
+
+  const handleCategoryCreate: (text: string) => void = async (text) => {
+    try {
+      const updated = await createCategory(text, props.isDemo)
+      setCategories(updated);
+      setVisiblePopover(false);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   return (<>
     <div className="mb-8 text-center">
@@ -50,6 +75,7 @@ export default function TaskList({ todos, categories, isDemo = false }: TaskList
     {/* 新規追加フォーム */}
     <TaskCreateForm 
       selectedCategory={selectedCategory}
+      handleCreate={handleTaskCreate}
     />
       
     {/* カテゴリ選択 */}
@@ -77,7 +103,7 @@ export default function TaskList({ todos, categories, isDemo = false }: TaskList
         {isVisiblePopover &&
           <AddCategoryPopOver
             onBlur={() => setVisiblePopover(false)}
-            onClose={() => setVisiblePopover(false)}
+            handleCreate={handleCategoryCreate}
           />}
       </div>
     </div>
@@ -88,11 +114,11 @@ export default function TaskList({ todos, categories, isDemo = false }: TaskList
         .map((todo) => <TaskListItem 
           key={todo.id}
           todo={todo} 
-          handleOnSelect={(i) => handleOnSelect(i)} 
-          handleToggleStatus={(i) => handleToggleStatus(i)} 
-          handleDelete={(i) => handleDelete(i.id)} 
+          handleOnSelect={(t) => handleSelectTask(t.id)} 
+          handleToggleStatus={(i) => handleTaskStatusToggle(i)} 
+          handleDelete={(i) => handleTaskDelete(i.id)} 
         />)
-      }  
+      }
     </div>
     <footer className="mt-8 text-center text-gray-500 dark:text-gray-400 shrink-0">
       <p>

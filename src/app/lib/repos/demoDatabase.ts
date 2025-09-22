@@ -61,8 +61,11 @@ export default class DemoDatabase implements TaskDatabase {
   }
 
   async createCategory(newCategory: string): Promise<Array<string>> {
+    const categories = await this.getCategories();
+    if(categories.includes(newCategory)) throw Error('Exist category');
+    
     this.mockData.categories = [...this.mockData.categories, newCategory];
-    return Promise.resolve(await this.getCategories());
+    return Promise.resolve(this.mockData.categories);
   }
 
   async deleteCategory(category: string): Promise<void> {

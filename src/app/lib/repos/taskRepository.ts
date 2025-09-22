@@ -5,7 +5,7 @@ import FirestoreTaskDatabase from "@/app/lib/repos/firestoreTaskDatabase";
 
 const demoRepository: TaskDatabase = new DemoDatabase();
 
-export async function getTaskRepository(idDemo: boolean = false) {
+export async function getTaskRepository(isDemo: boolean = false) {
   let taskRepository: TaskDatabase;
 
   if (process.env.NODE_ENV === 'production') {
@@ -15,5 +15,5 @@ export async function getTaskRepository(idDemo: boolean = false) {
   } else {
     taskRepository = demoRepository;
   }
-  return idDemo ? demoRepository : taskRepository;
+  return isDemo ? demoRepository : taskRepository;
 }
