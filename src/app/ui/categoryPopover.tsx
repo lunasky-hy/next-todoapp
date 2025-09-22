@@ -1,26 +1,36 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { FocusEvent, useEffect, useState } from "react";
 import { createCategory } from "@/app/lib/actions/categoryActions";
 
 type AddCategoryPopOverProps = {
-  onBlur?: () => void;
+  closePopOver: () => void;
   handleCreate: (text: string) => void;
 }
 
-export default function AddCategoryPopOver({onBlur, handleCreate}: AddCategoryPopOverProps) {
+export default function AddCategoryPopOver({closePopOver, handleCreate}: AddCategoryPopOverProps) {
   const [input, onChangeInput] = useState('');
   useEffect(() => {
     document.getElementById('popover-input')?.focus();
   }, []);
 
+  const onBlur = (event: FocusEvent<HTMLDivElement, Element>) => {
+    if (event.currentTarget.contains(event.relatedTarget)) return;
+    else closePopOver();
+  }
+
   const onCreate = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!input.trim()) return;
     handleCreate(input);
   }
 
   return (
-    <div id="add-category-popover" className="absolute top-full left-0 mt-3 bg-white border border-gray-200 rounded-lg shadow-xl z-10 w-max" onBlur={onBlur}>
+    <div 
+      id="add-category-popover" 
+      className="absolute top-full left-0 mt-3 bg-white border border-gray-200 rounded-lg shadow-xl z-10 w-max" 
+      onBlur={(e) => onBlur(e)}
+    >
       <div className="absolute -top-2 left-4 w-4 h-4 bg-white border-t border-l border-gray-200 transform rotate-45"></div>
       
       <form id="add-category-form" className="p-4" onSubmit={onCreate}>
@@ -36,7 +46,8 @@ export default function AddCategoryPopOver({onBlur, handleCreate}: AddCategoryPo
           />
           <button 
             type="submit" 
-            className="bg-blue-600 text-white font-semibold px-4 py-1.5 rounded-md hover:bg-blue-700 transition-colors text-sm ml-1 w-max" 
+            className="bg-blue-600 text-white font-semibold px-4 py-1.5 rounded-md hover:bg-blue-700 transition-colors text-sm ml-1 w-max disabled:bg-gray-700" 
+            disabled={!input.trim()}
           >
             追加
           </button>

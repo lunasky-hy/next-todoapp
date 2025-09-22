@@ -115,7 +115,7 @@ export default function TaskList(props: TaskListProps) {
         </button>
         {isVisiblePopover &&
           <AddCategoryPopOver
-            onBlur={() => setVisiblePopover(false)}
+            closePopOver={() => setVisiblePopover(false)}
             handleCreate={handleCategoryCreate}
           />}
       </div>
