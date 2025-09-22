@@ -139,11 +139,43 @@ export default class FirestoreTaskDatabase implements TaskDatabase {
       return [];
     }
   }
-  createCategory(newCategory: string): Promise<Array<string>> {
-    throw new Error("Method not implemented.");
+  
+  async createCategory(newCategory: string): Promise<Array<string>> {
+    const sessionUser = await this.getUserId();
+
+    const categories = await this.getCategories();
+    if (categories.includes(newCategory)) throw Error('Cannot create same category');
+
+    try {
+      const updated = [...categories, newCategory];
+      const ref = doc(db, `users`, sessionUser).withConverter(this.todoConverter);
+
+      await updateDoc(ref, {
+        categories: [...categories, newCategory],
+      });
+
+      return updated;
+    } catch (error) {
+      throw new Error('Operation Failed. create category');
+    }
   }
-  deleteCategory(category: string): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async deleteCategory(target: string): Promise<void> {
+    const sessionUser = await this.getUserId();
+
+    const categories = await this.getCategories();
+    if (!categories.includes(target)) throw Error('Do not exist this category');
+
+    try {
+      const updated = categories.filter((cate) => cate !== target);
+      const ref = doc(db, `users`, sessionUser).withConverter(this.todoConverter);
+
+      await updateDoc(ref, {
+        categories: updated,
+      });
+    } catch (error) {
+      throw new Error('Operation Failed. create category');
+    }
   }
 
   async getUserId(): Promise<string> {
